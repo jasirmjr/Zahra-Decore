@@ -58,24 +58,24 @@ export default function Services() {
         text="Everything for your interior — designed, manufactured and installed by us." />
 
       {SERVICES.map((s, i) => (
-        <section key={s.title} className={`w-full py-16 md:py-20 ${i % 2 ? 'bg-white' : 'bg-cream'}`}>
-          <div className="wrap grid items-center gap-8 md:grid-cols-2 md:gap-16">
-            <div className={`aspect-[4/3] overflow-hidden ${i % 2 ? 'md:order-2' : ''}`}>
+        <section key={s.title} className={`w-full py-10 sm:py-12 md:py-14 ${i % 2 ? 'bg-white' : 'bg-cream'}`}>
+          <div className="wrap grid items-center gap-6 md:grid-cols-2 md:gap-10 lg:gap-14">
+            <div className={`aspect-[16/10] sm:aspect-[4/3] overflow-hidden rounded-2xl shadow-xs ${i % 2 ? 'md:order-2' : ''}`}>
               <Photo src={s.image} alt={s.title} sizes="(min-width: 768px) 50vw, 100vw" className="h-full w-full object-cover" />
             </div>
             <div>
-              <span className="inline-grid h-12 w-12 place-items-center rounded-2xl bg-gold/15 text-lg font-bold text-gold">
+              <span className="inline-grid h-10 w-10 sm:h-11 sm:w-11 place-items-center rounded-xl bg-gold/15 text-base sm:text-lg font-bold text-gold">
                 {String(i + 1).padStart(2, '0')}
               </span>
-              <h2 className="title mt-4 !text-3xl">{s.title}</h2>
-              <p className="mt-4 leading-relaxed text-muted">{s.text}</p>
-              <ul className="mt-6 flex flex-wrap gap-2">
+              <h2 className="title mt-3 !text-2xl sm:!text-3xl">{s.title}</h2>
+              <p className="mt-3 text-sm sm:text-base leading-relaxed text-muted">{s.text}</p>
+              <ul className="mt-5 flex flex-wrap gap-2">
                 {s.points.map((p) => (
-                  <li key={p} className={`px-4 py-2 text-sm font-semibold ${i % 2 ? 'bg-cream' : 'bg-white'}`}>✓ {p}</li>
+                  <li key={p} className={`rounded-lg px-3 py-1.5 text-xs sm:text-sm font-semibold ${i % 2 ? 'bg-cream' : 'bg-white'}`}>✓ {p}</li>
                 ))}
               </ul>
               <a href={waLink(`Hello ${SITE.name}, I would like to enquire about: ${s.title}`)} target="_blank" rel="noreferrer"
-                className="btn-gold mt-8"><WhatsAppIcon width={16} /> Enquire Now <ArrowCircle /></a>
+                className="btn-gold mt-6"><WhatsAppIcon width={16} /> Enquire Now <ArrowCircle /></a>
             </div>
           </div>
         </section>

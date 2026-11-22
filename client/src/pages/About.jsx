@@ -12,14 +12,14 @@ export default function About() {
         text="All interior products — manufactured by us, customised for you." />
       <AboutContent full />
 
-      <section className="w-full bg-white py-20">
+      <section className="w-full bg-white py-10 sm:py-14 md:py-16">
         <div className="wrap">
           <SectionHead center eyebrow="What we make" title="Our product range">
             Everything is manufactured in our own workshop — and every item can be customised.
           </SectionHead>
-          <div className="mt-10 grid grid-cols-2 gap-3 md:grid-cols-4">
+          <div className="mt-6 sm:mt-8 grid grid-cols-2 gap-2.5 sm:gap-3 sm:grid-cols-3 md:grid-cols-4">
             {PRODUCTS.map((p) => (
-              <div key={p} className="rounded-2xl bg-cream px-4 py-5 text-center font-semibold">{p}</div>
+              <div key={p} className="rounded-xl sm:rounded-2xl bg-cream px-3 py-3.5 sm:px-4 sm:py-4 text-center text-xs sm:text-sm font-semibold text-ink shadow-xs">{p}</div>
             ))}
           </div>
         </div>

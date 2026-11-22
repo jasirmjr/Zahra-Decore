@@ -30,12 +30,12 @@ export default function Navbar() {
 
   return (
     <header className={`fixed inset-x-0 top-0 z-40 w-full border-b border-black/5 bg-white transition-shadow ${scrolled || open ? 'shadow-[0_6px_24px_-12px_rgba(0,0,0,0.25)]' : ''}`}>
-      <nav className="wrap flex h-20 items-center justify-between">
+      <nav className="wrap flex h-16 sm:h-18 md:h-20 items-center justify-between">
         <Link to="/" aria-label="Zahra Decor home">
-          <img src="/logo.webp" alt="Zahra Decor" className="h-16 w-auto" />
+          <img src="/logo.webp" alt="Zahra Decor" className="h-12 sm:h-14 md:h-16 w-auto object-contain" />
         </Link>
 
-        <ul className="hidden items-center gap-10 lg:flex">
+        <ul className="hidden items-center gap-8 lg:flex xl:gap-10">
           {LINKS.map((l) => (
             <li key={l.to}><NavLink to={l.to} className={linkCls}>{l.label}</NavLink></li>
           ))}
@@ -45,7 +45,7 @@ export default function Navbar() {
           Enquire Now <ArrowCircle />
         </a>
 
-        <button className="grid h-11 w-11 place-items-center rounded-lg bg-cream lg:hidden" onClick={() => setOpen(!open)} aria-label="Menu">
+        <button className="grid h-10 w-10 sm:h-11 sm:w-11 place-items-center rounded-lg bg-cream lg:hidden" onClick={() => setOpen(!open)} aria-label="Menu">
           {open ? <CloseIcon /> : <MenuIcon />}
         </button>
       </nav>

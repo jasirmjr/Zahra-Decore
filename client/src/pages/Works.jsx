@@ -21,29 +21,29 @@ export default function Works() {
         image="bedroom-light"
         text="A look at homes and spaces we have furnished." />
 
-      <section className="wrap py-16">
+      <section className="wrap py-10 sm:py-14 md:py-16">
         {/* Featured Project Videos */}
-        <div className="mb-14">
-          <h2 className="title mb-3 text-2xl md:text-3xl">Project Videos</h2>
-          <p className="mb-8 text-muted">Watch our furniture manufacturing process and completed interior projects.</p>
-          <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
-            <div className="group overflow-hidden rounded-3xl bg-white p-4 shadow-sm transition hover:shadow-xl">
-              <div className="relative aspect-video w-full overflow-hidden rounded-2xl bg-black">
+        <div className="mb-10 sm:mb-12">
+          <h2 className="title mb-2 text-xl sm:text-2xl md:text-3xl">Project Videos</h2>
+          <p className="mb-6 text-xs sm:text-sm md:text-base text-muted">Watch our furniture manufacturing process and completed interior projects.</p>
+          <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 sm:gap-6">
+            <div className="group overflow-hidden rounded-2xl sm:rounded-3xl bg-white p-3 sm:p-4 shadow-sm transition hover:shadow-xl">
+              <div className="relative aspect-video w-full overflow-hidden rounded-xl sm:rounded-2xl bg-black">
                 <video controls playsInline preload="metadata" poster="/work-video-1-poster.jpg" className="h-full w-full object-cover">
                   <source src="/work-video-1.mp4" type="video/mp4" />
                 </video>
               </div>
-              <h3 className="mt-4 px-2 text-lg font-bold text-ink">In-House Manufacturing</h3>
-              <p className="px-2 text-sm text-muted">Skilled craftsmen building custom furniture in our workshop</p>
+              <h3 className="mt-3 px-1 text-base sm:text-lg font-bold text-ink">In-House Manufacturing</h3>
+              <p className="px-1 text-xs sm:text-sm text-muted">Skilled craftsmen building custom furniture in our workshop</p>
             </div>
-            <div className="group overflow-hidden rounded-3xl bg-white p-4 shadow-sm transition hover:shadow-xl">
-              <div className="relative aspect-video w-full overflow-hidden rounded-2xl bg-black">
+            <div className="group overflow-hidden rounded-2xl sm:rounded-3xl bg-white p-3 sm:p-4 shadow-sm transition hover:shadow-xl">
+              <div className="relative aspect-video w-full overflow-hidden rounded-xl sm:rounded-2xl bg-black">
                 <video controls playsInline preload="metadata" poster="/work-video-2-poster.jpg" className="h-full w-full object-cover">
                   <source src="/work-video-2.mp4" type="video/mp4" />
                 </video>
               </div>
-              <h3 className="mt-4 px-2 text-lg font-bold text-ink">Completed Interior Installation</h3>
-              <p className="px-2 text-sm text-muted">Curtains, beds & custom living room furniture ready to live in</p>
+              <h3 className="mt-3 px-1 text-base sm:text-lg font-bold text-ink">Completed Interior Installation</h3>
+              <p className="px-1 text-xs sm:text-sm text-muted">Curtains, beds & custom living room furniture ready to live in</p>
             </div>
           </div>
         </div>
@@ -51,7 +51,7 @@ export default function Works() {
         {works === null ? (
           <p className="text-center text-muted">Loading…</p>
         ) : works.length === 0 ? null : (
-          <div className="columns-1 gap-5 sm:columns-2 lg:columns-3">
+          <div className="columns-2 sm:columns-2 md:columns-3 lg:columns-4 gap-3 sm:gap-4">
             {works.map((w) => (
               <figure key={w.id} className="group mb-5 cursor-zoom-in break-inside-avoid rounded-3xl bg-white p-3 transition hover:shadow-xl" onClick={() => setOpen(w)}>
                 <div className="overflow-hidden rounded-2xl">
