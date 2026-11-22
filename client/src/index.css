@@ -1,0 +1,56 @@
+@import "tailwindcss";
+
+/* ------------------------------------------------------------------
+   THEME – change fonts / colours here
+   Font: Poppins (headings bold 700, buttons/menu semibold 600)
+------------------------------------------------------------------- */
+@theme {
+  --color-gold: #b08d3c;        /* brand accent (from logo) */
+  --color-gold-light: #e9dcbc;
+  --color-gold-dark: #8c6d27;
+  --color-ink: #2b2a27;         /* text */
+  --color-muted: #6f6a62;       /* secondary text */
+  --color-cream: #f6f3ee;       /* page background */
+  --color-card: #efe9e0;        /* card background */
+  --font-sans: "Poppins", "Segoe UI", Arial, sans-serif;
+  --font-serif: "Poppins", "Segoe UI", Arial, sans-serif;
+}
+
+html { scroll-behavior: smooth; }
+body { @apply overflow-x-clip bg-cream text-ink font-sans antialiased; }
+h1, h2, h3, h4 { @apply font-bold tracking-tight; }
+p { @apply font-normal; }
+
+button {
+  border-radius: 0.5rem;
+}
+
+@utility btn {
+  @apply inline-flex items-center justify-center gap-3 py-2 pl-6 pr-2 text-sm font-semibold transition duration-300 cursor-pointer rounded-lg;
+}
+@utility btn-gold {
+  @apply inline-flex items-center justify-center gap-3 py-2 pl-6 pr-2 text-sm font-semibold transition duration-300 cursor-pointer bg-gold text-white hover:bg-gold-dark rounded-lg;
+}
+@utility btn-outline {
+  @apply inline-flex items-center justify-center gap-3 py-2 pl-6 pr-2 text-sm font-semibold transition duration-300 cursor-pointer border-2 border-ink/15 bg-white text-ink hover:border-gold hover:text-gold rounded-lg;
+}
+@utility btn-plain {
+  @apply inline-flex items-center justify-center gap-2 px-6 py-3 text-sm font-semibold transition duration-300 cursor-pointer rounded-lg;
+}
+@utility eyebrow {
+  @apply inline-flex items-center gap-3 text-xs font-semibold tracking-[0.2em] uppercase text-gold after:h-0.5 after:w-10 after:bg-gold/40 after:content-[''];
+}
+@utility title {
+  @apply text-3xl md:text-[2.6rem] leading-[1.2] font-bold text-ink;
+}
+@utility wrap {
+  @apply mx-auto w-full max-w-[1600px] px-4 md:px-8 xl:px-12;
+}
+@utility input {
+  @apply w-full border border-neutral-300 bg-white px-3 py-2.5 text-sm outline-none focus:border-gold;
+}
+
+@keyframes fadeUp { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: none; } }
+@keyframes heroZoom { from { transform: scale(1.08); } to { transform: scale(1); } }
+.fade-up { animation: fadeUp .9s ease-out both; }
+.animate-hero { animation: heroZoom 7s ease-out forwards; }
