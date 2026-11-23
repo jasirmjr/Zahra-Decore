@@ -5,11 +5,11 @@
     "install:all": "npm install && npm install --prefix client && npm install --prefix server",
     "dev": "concurrently -n api,web -c yellow,cyan \"npm run dev --prefix server\" \"npm run dev --prefix client\"",
     "build": "npm run build --prefix client",
-    "start": "npm start --prefix server",
     "images": "node scripts/optimize-images.mjs"
   },
   "devDependencies": {
     "concurrently": "^10.0.7",
     "sharp": "^0.35.5"
-  }
+  },
+  "type": "module"
 }

@@ -1,10 +1,11 @@
 # Zahra Decor website
 
-React + Tailwind CSS frontend (`client/`) and a small Node/Express server (`server/`) that stores admin uploads.
+React + Tailwind CSS frontend (`client/`) and a small Express API (`server/`) that stores admin uploads in Vercel Blob.
 
 ## Run on your computer
 ```
 npm run install:all   # first time only
+vercel env pull       # first time only: gets the Blob token into .env.local
 npm run dev           # site: http://localhost:5173   admin: http://localhost:5173/admin
 ```
 
@@ -20,17 +21,17 @@ Don't put big photos directly in `client/public` — they would be sent to visit
 Photos uploaded in the admin panel are optimized automatically (WebP, max 1920px).
 
 ## Admin password
-`server/.env` → `ADMIN_PASSWORD=...` (change it before going live).
+Set `ADMIN_PASSWORD` in Vercel → Project → Settings → Environment Variables, then redeploy.
 
 ## Admin panel (/admin)
 - **Products (Shop)**: image + name + category + price → shows on the home page; "Shop Now" opens WhatsApp with the order.
 - **Works Gallery**: image + caption → shows on the Works page.
 - **Hero Image**: replace the full-screen image on the home page.
 
-## Go live
+Photos are shrunk to WebP in the browser and saved in Vercel Blob. The public site may take up to a minute to show changes.
+
+## Go live (Vercel)
 ```
-npm run build
-npm start             # serves site + API on PORT (default 5000)
+vercel deploy --prod   # deploys both services (client + server), see vercel.json
 ```
-Host on any Node host with a persistent disk (VPS, Render with disk, Railway volume, Hostinger VPS…),
-because uploaded images are saved in `server/uploads` and data in `server/data`.
+Live at https://zahra-decor.vercel.app

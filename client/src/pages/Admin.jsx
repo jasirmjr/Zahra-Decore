@@ -54,7 +54,7 @@ function Manager({ endpoint, fields, title, onAuthError }) {
   const [busy, setBusy] = useState(false);
   const [msg, setMsg] = useState('');
 
-  const load = () => api(`/${endpoint}`).then(setItems);
+  const load = () => api(`/${endpoint}`, { fresh: true }).then(setItems);
   useEffect(() => { load(); setForm({}); setFile(null); setMsg(''); }, [endpoint]);
 
   const handle = async (fn) => {
@@ -129,7 +129,7 @@ function HeroManager({ onAuthError }) {
   const [current, setCurrent] = useState(null);
   const [file, setFile] = useState(null);
   const [msg, setMsg] = useState('');
-  useEffect(() => { api('/settings').then((s) => setCurrent(s.heroImage || null)); }, []);
+  useEffect(() => { api('/settings', { fresh: true }).then((s) => setCurrent(s.heroImage || null)); }, []);
 
   const run = async (fn) => {
     try { await fn(); } catch (e) { if (e.status === 401) onAuthError(); else setMsg(e.message); }

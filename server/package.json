@@ -3,13 +3,11 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "node --watch --env-file-if-exists=.env index.js",
-    "start": "node --env-file-if-exists=.env index.js"
+    "dev": "node --watch --env-file-if-exists=../.env.local dev.js"
   },
   "dependencies": {
-    "compression": "^1.8.2",
+    "@vercel/blob": "^2.9.0",
     "express": "^5.3.0",
-    "multer": "^2.5.0",
-    "sharp": "^0.35.5"
+    "multer": "^2.5.0"
   }
 }
