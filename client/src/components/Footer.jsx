@@ -16,19 +16,19 @@ export default function Footer() {
         </div>
         <div>
           <h4 className="mb-3 text-sm sm:text-base font-bold text-ink">Navigation</h4>
-          <ul className="space-y-2 text-xs sm:text-sm font-medium text-muted">
+          <ul className="space-y-0.5 text-sm font-medium text-muted">
             {[['/', 'Home'], ['/about', 'About Us'], ['/services', 'Services'], ['/works', 'Works'], ['/contact', 'Contact']].map(([to, l]) => (
-              <li key={to}><Link to={to} className="hover:text-gold">{l}</Link></li>
+              <li key={to}><Link to={to} className="inline-block py-1.5 hover:text-gold">{l}</Link></li>
             ))}
           </ul>
         </div>
         <div>
           <h4 className="mb-3 text-sm sm:text-base font-bold text-ink">Contact</h4>
-          <ul className="space-y-2.5 text-xs sm:text-sm font-medium text-muted">
-            <li><a href={telLink} className="flex items-center gap-2 hover:text-gold"><PhoneIcon width={14} className="text-gold shrink-0" />{SITE.phone}</a></li>
-            <li><a href={waLink()} target="_blank" rel="noreferrer" className="flex items-center gap-2 hover:text-gold"><WhatsAppIcon width={14} className="text-gold shrink-0" />Chat on WhatsApp</a></li>
-            <li><a href={mailLink} className="flex items-center gap-2 break-all hover:text-gold"><MailIcon width={14} className="shrink-0 text-gold" />{SITE.email}</a></li>
-            <li><a href={SITE.mapLink} target="_blank" rel="noreferrer" className="flex items-start gap-2 hover:text-gold"><PinIcon width={14} className="mt-0.5 shrink-0 text-gold" />{SITE.address}</a></li>
+          <ul className="space-y-0.5 text-sm font-medium text-muted">
+            <li><a href={telLink} className="flex items-center gap-2 py-1.5 hover:text-gold"><PhoneIcon width={14} className="text-gold shrink-0" />{SITE.phone}</a></li>
+            <li><a href={waLink()} target="_blank" rel="noreferrer" className="flex items-center gap-2 py-1.5 hover:text-gold"><WhatsAppIcon width={14} className="text-gold shrink-0" />Chat on WhatsApp</a></li>
+            <li><a href={mailLink} className="flex items-center gap-2 py-1.5 break-words hover:text-gold"><MailIcon width={14} className="shrink-0 text-gold" /><span className="min-w-0">{SITE.email.split("@")[0]}<wbr />@{SITE.email.split("@")[1]}</span></a></li>
+            <li><a href={SITE.mapLink} target="_blank" rel="noreferrer" className="flex items-start gap-2 py-1.5 hover:text-gold"><PinIcon width={14} className="mt-0.5 shrink-0 text-gold" />{SITE.address}</a></li>
           </ul>
         </div>
         <div>
@@ -40,7 +40,7 @@ export default function Footer() {
           </div>
         </div>
       </div>
-      <div className="border-t border-black/5 bg-ink py-4 text-center text-xs text-white/70">
+      <div className="border-t border-black/5 bg-ink px-4 py-4 text-center text-xs text-white/70">
         © {new Date().getFullYear()} {SITE.name} · Curtain & Furniture. All rights reserved.
       </div>
     </footer>

@@ -66,15 +66,15 @@ export default function Home() {
         {/* floating stat cards */}
         <div className="absolute inset-x-0 bottom-4 sm:bottom-6">
           <div className="wrap">
-            <div className="grid grid-cols-3 gap-2 sm:gap-3 lg:ml-auto lg:max-w-2xl">
+            <div className="grid grid-cols-3 gap-2 sm:gap-3 lg:ml-auto lg:mr-16 lg:max-w-3xl">
               {STATS.map(([Icon, t, d]) => (
                 <div key={t} className="flex flex-col items-center text-center sm:flex-row sm:text-left sm:items-center gap-1.5 sm:gap-3 rounded-xl sm:rounded-2xl bg-white/95 p-2 sm:p-3 md:p-3.5 shadow-lg backdrop-blur">
                   <span className="grid h-8 w-8 sm:h-10 sm:w-10 shrink-0 place-items-center rounded-lg sm:rounded-xl bg-gold/15 text-gold">
                     <Icon width={16} />
                   </span>
                   <span className="leading-tight min-w-0">
-                    <span className="block text-xs sm:text-sm font-bold text-ink md:text-base truncate">{t}</span>
-                    <span className="hidden sm:block text-[11px] text-muted md:text-xs truncate">{d}</span>
+                    <span className="block text-xs sm:text-sm font-bold text-ink md:text-base">{t}</span>
+                    <span className="hidden sm:block text-[11px] text-muted md:text-xs">{d}</span>
                   </span>
                 </div>
               ))}
@@ -108,8 +108,8 @@ export default function Home() {
                 <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/15 to-transparent" />
                 <div className="absolute inset-x-2 bottom-2 flex items-center justify-between gap-1.5 rounded-lg bg-white/95 p-2 sm:inset-x-3 sm:bottom-3 sm:rounded-xl sm:p-3 md:inset-x-4 md:bottom-4 md:pl-4 shadow-md backdrop-blur">
                   <span className="min-w-0">
-                    <span className="block font-bold leading-tight text-ink text-xs sm:text-base md:text-lg truncate">{cat.name}</span>
-                    <span className="flex items-center gap-1 text-[10px] sm:text-xs font-semibold text-gold">
+                    <span className="block font-bold leading-tight text-ink text-[13px] sm:text-base md:text-lg line-clamp-2">{cat.name}</span>
+                    <span className="flex items-center gap-1 text-[11px] sm:text-xs font-semibold text-gold">
                       <WhatsAppIcon width={12} className="shrink-0" />
                       <span className="hidden sm:inline">Enquire on WhatsApp</span>
                       <span className="sm:hidden">Enquire</span>

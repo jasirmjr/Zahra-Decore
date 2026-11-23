@@ -24,7 +24,7 @@ const STEPS = [
 export function Process() {
   return (
     <section className="w-full py-10 sm:py-14 md:py-16">
-      <div className="wrap grid items-center gap-8 lg:grid-cols-[1fr_2.4fr] lg:gap-12">
+      <div className="wrap grid items-center gap-8 xl:grid-cols-[1fr_2.4fr] xl:gap-12">
         <SectionHead eyebrow="How we work" title="Simple process, from idea to your home" />
         <div className="grid grid-cols-2 gap-2.5 sm:gap-4 lg:grid-cols-4">
           {STEPS.map(([Icon, t, d], i) => (

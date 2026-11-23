@@ -6,15 +6,15 @@ export const SITE = {
   tagline: 'Curtain & Furniture',
 
   // Phone shown on the site + used for "Call" buttons
-  phone: '+91 90727 37943',
+  phone: '+91 95679 39608',
   // WhatsApp number: country code + number, digits only (no + or spaces)
-  whatsapp: '919072737943',
+  whatsapp: '919567939608',
   email: 'zahradecor123@gmail.com',
 
   // Shown as text on the site (footer + contact page)
   address: 'View our showroom on Google Maps',
   // Your Google Maps share link – every address/map click opens this exact location
-  mapLink: 'https://maps.app.goo.gl/BwFKKTDBcT4pFqeP7',
+  mapLink: 'https://maps.app.goo.gl/4ZC2MCEniFxFvRL9A',
   // Map preview on the Contact page: put the shop's full address or "lat,lng" here.
   // Leave empty to show a photo card with an "Open in Google Maps" button instead.
   mapQuery: '',

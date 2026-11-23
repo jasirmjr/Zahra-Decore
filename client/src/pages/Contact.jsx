@@ -29,10 +29,10 @@ export default function Contact() {
 
       <section className="wrap grid gap-6 py-10 sm:py-12 md:py-14 lg:grid-cols-2 lg:gap-8">
         <div>
-          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-1 2xl:grid-cols-2">
             <Card icon={<PhoneIcon />} label="Call us" href={telLink}>{SITE.phone}</Card>
             <Card icon={<WhatsAppIcon />} label="WhatsApp" href={waLink()} external>Chat on WhatsApp</Card>
-            <Card icon={<MailIcon />} label="Email" href={mailLink}>{SITE.email}</Card>
+            <Card icon={<MailIcon />} label="Email" href={mailLink}>{SITE.email.split("@")[0]}<wbr />@{SITE.email.split("@")[1]}</Card>
             <Card icon={<PinIcon />} label="Visit showroom" href={SITE.mapLink} external>{SITE.address}</Card>
           </div>
 
