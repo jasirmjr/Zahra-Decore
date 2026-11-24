@@ -14,10 +14,10 @@ export const SITE = {
   // Shown as text on the site (footer + contact page)
   address: 'View our showroom on Google Maps',
   // Your Google Maps share link – every address/map click opens this exact location
-  mapLink: 'https://maps.app.goo.gl/4ZC2MCEniFxFvRL9A',
+  mapLink: 'https://maps.app.goo.gl/33STGdaGoptjzwZi7',
   // Map preview on the Contact page: put the shop's full address or "lat,lng" here.
   // Leave empty to show a photo card with an "Open in Google Maps" button instead.
-  mapQuery: '',
+  mapQuery: '11.0046617,75.979915',
 
   instagram: 'https://instagram.com/zahradecor',
   facebook: 'https://facebook.com/zahradecor',
