@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { SITE, waLink, telLink, mailLink } from '../config';
+import { SITE, waLink, mailLink, tel, PHONES } from '../config';
 import { WhatsAppIcon, PhoneIcon, MailIcon, InstagramIcon, FacebookIcon, PinIcon } from './Icons';
 
 const social = 'grid h-9 w-9 sm:h-10 sm:w-10 place-items-center rounded-lg bg-cream text-ink transition hover:bg-gold hover:text-white';
@@ -25,7 +25,9 @@ export default function Footer() {
         <div>
           <h4 className="mb-3 text-sm sm:text-base font-bold text-ink">Contact</h4>
           <ul className="space-y-0.5 text-sm font-medium text-muted">
-            <li><a href={telLink} className="flex items-center gap-2 py-1.5 hover:text-gold"><PhoneIcon width={14} className="text-gold shrink-0" />{SITE.phone}</a></li>
+            {PHONES.map((p) => (
+              <li key={p}><a href={tel(p)} className="flex items-center gap-2 py-1.5 hover:text-gold"><PhoneIcon width={14} className="text-gold shrink-0" />{p}</a></li>
+            ))}
             <li><a href={waLink()} target="_blank" rel="noreferrer" className="flex items-center gap-2 py-1.5 hover:text-gold"><WhatsAppIcon width={14} className="text-gold shrink-0" />Chat on WhatsApp</a></li>
             <li><a href={mailLink} className="flex items-center gap-2 py-1.5 break-words hover:text-gold"><MailIcon width={14} className="shrink-0 text-gold" /><span className="min-w-0">{SITE.email.split("@")[0]}<wbr />@{SITE.email.split("@")[1]}</span></a></li>
             <li><a href={SITE.mapLink} target="_blank" rel="noreferrer" className="flex items-start gap-2 py-1.5 hover:text-gold"><PinIcon width={14} className="mt-0.5 shrink-0 text-gold" />{SITE.address}</a></li>

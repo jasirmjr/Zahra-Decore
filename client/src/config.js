@@ -7,6 +7,8 @@ export const SITE = {
 
   // Phone shown on the site + used for "Call" buttons
   phone: '+91 95679 39608',
+  // Extra call number (shown under the main one wherever "Call us" numbers are listed)
+  phone2: '+91 90727 37943',
   // WhatsApp number: country code + number, digits only (no + or spaces)
   whatsapp: '919567939608',
   email: 'zahradecor123@gmail.com',
@@ -38,5 +40,8 @@ export const DEFAULT_HERO = 'living-lsofa';
 
 export const waLink = (text = `Hello ${SITE.name}, I would like to know more.`) =>
   `https://wa.me/${SITE.whatsapp}?text=${encodeURIComponent(text)}`;
-export const telLink = `tel:${SITE.phone.replace(/\s/g, '')}`;
+export const tel = (n) => `tel:${n.replace(/\s/g, '')}`;
+export const telLink = tel(SITE.phone);
+// All call numbers, main one first
+export const PHONES = [SITE.phone, SITE.phone2].filter(Boolean);
 export const mailLink = `mailto:${SITE.email}`;

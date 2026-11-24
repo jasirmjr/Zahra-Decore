@@ -1,20 +1,21 @@
 import PageHeader from '../components/PageHeader';
 import ContactButtons from '../components/ContactButtons';
 import Photo from '../components/Photo';
-import { SITE, waLink, telLink, mailLink } from '../config';
+import { SITE, waLink, mailLink, tel, PHONES } from '../config';
 import { PhoneIcon, MailIcon, PinIcon, WhatsAppIcon, InstagramIcon, FacebookIcon, ArrowCircle } from '../components/Icons';
 
 function Card({ icon, label, children, href, external }) {
+  const Tag = href ? 'a' : 'div'; // no href: a plain card that can hold several links
   return (
-    <a href={href} target={external ? '_blank' : undefined} rel="noreferrer"
+    <Tag href={href} target={external ? '_blank' : undefined} rel={href ? 'noreferrer' : undefined}
       className="group flex items-center gap-4 rounded-3xl bg-white p-5 transition hover:-translate-y-0.5 hover:shadow-xl">
       <span className="grid h-12 w-12 shrink-0 place-items-center rounded-2xl bg-gold/15 text-gold">{icon}</span>
       <span className="min-w-0 flex-1">
         <span className="block text-sm font-semibold text-muted">{label}</span>
         <span className="block break-words font-bold">{children}</span>
       </span>
-      <span className="opacity-0 transition group-hover:opacity-100"><ArrowCircle dark /></span>
-    </a>
+      {href && <span className="opacity-0 transition group-hover:opacity-100"><ArrowCircle dark /></span>}
+    </Tag>
   );
 }
 
@@ -30,7 +31,9 @@ export default function Contact() {
       <section className="wrap grid gap-6 py-10 sm:py-12 md:py-14 lg:grid-cols-2 lg:gap-8">
         <div>
           <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-1 2xl:grid-cols-2">
-            <Card icon={<PhoneIcon />} label="Call us" href={telLink}>{SITE.phone}</Card>
+            <Card icon={<PhoneIcon />} label="Call us">
+              {PHONES.map((p) => <a key={p} href={tel(p)} className="block py-0.5 hover:text-gold">{p}</a>)}
+            </Card>
             <Card icon={<WhatsAppIcon />} label="WhatsApp" href={waLink()} external>Chat on WhatsApp</Card>
             <Card icon={<MailIcon />} label="Email" href={mailLink}>{SITE.email.split("@")[0]}<wbr />@{SITE.email.split("@")[1]}</Card>
             <Card icon={<PinIcon />} label="Visit showroom" href={SITE.mapLink} external>{SITE.address}</Card>

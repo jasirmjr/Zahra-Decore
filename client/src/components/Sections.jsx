@@ -1,5 +1,5 @@
 import Photo from './Photo';
-import { SITE, waLink, telLink, mailLink } from '../config';
+import { SITE, waLink, telLink, mailLink, tel, PHONES } from '../config';
 import { ChatIcon, PencilIcon, HammerIcon, HomeIcon, PhoneIcon, MailIcon, ArrowCircle, WhatsAppIcon } from './Icons';
 
 
@@ -64,10 +64,13 @@ export function CtaBanner() {
         <div className="relative min-h-[260px] sm:min-h-[300px] md:min-h-[340px]">
           <Photo src="dining-living" sizes="(min-width: 1024px) 50vw, 100vw" className="absolute inset-0 h-full w-full object-cover" />
           <div className="absolute right-4 top-1/2 flex -translate-y-1/2 flex-col gap-2.5 sm:right-6 md:right-10 sm:gap-3">
-            <a href={telLink} className="flex items-center gap-2.5 sm:gap-3 rounded-xl sm:rounded-2xl bg-white/95 p-3 sm:p-4 pr-4 sm:pr-6 shadow-lg backdrop-blur transition hover:scale-[1.02]">
+            <div className="flex items-center gap-2.5 sm:gap-3 rounded-xl sm:rounded-2xl bg-white/95 p-3 sm:p-4 pr-4 sm:pr-6 shadow-lg backdrop-blur">
               <span className="grid h-9 w-9 sm:h-11 sm:w-11 place-items-center rounded-lg sm:rounded-xl bg-gold/15 text-gold"><PhoneIcon width={18} /></span>
-              <span><span className="block text-xs sm:text-sm md:text-base font-bold">{SITE.phone}</span><span className="text-[11px] sm:text-xs text-muted">Call us anytime</span></span>
-            </a>
+              <span>
+                {PHONES.map((p) => <a key={p} href={tel(p)} className="block text-xs sm:text-sm md:text-base font-bold hover:text-gold">{p}</a>)}
+                <span className="text-[11px] sm:text-xs text-muted">Call us anytime</span>
+              </span>
+            </div>
             <a href={mailLink} className="flex items-center gap-2.5 sm:gap-3 rounded-xl sm:rounded-2xl bg-white/95 p-3 sm:p-4 pr-4 sm:pr-6 shadow-lg backdrop-blur transition hover:scale-[1.02]">
               <span className="grid h-9 w-9 sm:h-11 sm:w-11 place-items-center rounded-lg sm:rounded-xl bg-gold/15 text-gold"><MailIcon width={18} /></span>
               <span><span className="block text-xs sm:text-sm md:text-base font-bold truncate max-w-[180px] sm:max-w-none">{SITE.email}</span><span className="text-[11px] sm:text-xs text-muted">Reply within a day</span></span>
