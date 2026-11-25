@@ -254,15 +254,13 @@ function HeroManager({ onAuthError }) {
 
 /* ---------------- Page ---------------- */
 const TABS = [
-  { id: 'products', label: 'Products (Shop)' },
   { id: 'works', label: 'Projects' },
   { id: 'gallery', label: 'Gallery' },
-  { id: 'hero', label: 'Hero Image' },
 ];
 
 export default function Admin() {
   const [authed, setAuthed] = useState(null);
-  const [tab, setTab] = useState('products');
+  const [tab, setTab] = useState('works');
 
   useEffect(() => {
     if (!getToken()) return setAuthed(false);
@@ -298,13 +296,6 @@ export default function Admin() {
       </header>
 
       <div className="mx-auto max-w-[1600px] px-4 py-10 md:px-8">
-        {tab === 'products' && (
-          <Manager endpoint="products" title="product" onAuthError={logout} fields={[
-            { name: 'name', label: 'Product name', placeholder: 'e.g. Royal L-Shape Sofa', required: true },
-            { name: 'category', label: 'Category', options: CATEGORIES.map((c) => c.name), required: true },
-            { name: 'price', label: 'Price (optional)', placeholder: 'e.g. ₹45,000' },
-          ]} />
-        )}
         {tab === 'works' && (
           <Manager endpoint="works" title="project photos & videos" videos multiple onAuthError={logout} fields={[
             { name: 'caption', label: 'Caption / name', placeholder: 'e.g. Villa living room, Kochi' },
@@ -316,7 +307,6 @@ export default function Admin() {
             { name: 'category', label: 'Category (optional)', options: CATEGORIES.map((c) => c.name) },
           ]} />
         )}
-        {tab === 'hero' && <HeroManager onAuthError={logout} />}
       </div>
     </div>
   );
