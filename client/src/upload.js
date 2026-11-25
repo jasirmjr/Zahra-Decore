@@ -15,26 +15,65 @@ const send = (file, onProgress) =>
     onUploadProgress: onProgress ? ({ percentage }) => onProgress(percentage) : undefined,
   }).then((b) => b.url);
 
-// Grab a frame ~1s in as the video's poster. Some formats (e.g. iPhone HEVC on Windows) can't be
-// decoded by the browser — then there is simply no poster and a dark tile with a play icon is shown.
+// Grab a frame ~1s in as the video's poster.
 function videoFrame(file) {
   return new Promise((resolve) => {
     const url = URL.createObjectURL(file);
     const v = document.createElement('video');
-    const done = (r) => { URL.revokeObjectURL(url); resolve(r); };
-    const timer = setTimeout(() => done(null), 15000);
-    v.muted = true; v.playsInline = true; v.preload = 'auto'; v.src = url;
-    v.onerror = () => { clearTimeout(timer); done(null); };
-    v.onloadedmetadata = () => { v.currentTime = Math.min(1, (v.duration || 0) / 2); };
-    v.onseeked = async () => {
-      clearTimeout(timer);
-      try {
-        const canvas = document.createElement('canvas');
-        canvas.width = v.videoWidth; canvas.height = v.videoHeight;
-        canvas.getContext('2d').drawImage(v, 0, 0);
-        done({ bitmap: await createImageBitmap(canvas), w: v.videoWidth, h: v.videoHeight });
-      } catch { done(null); }
+    v.muted = true;
+    v.playsInline = true;
+    v.preload = 'auto';
+
+    let resolved = false;
+    const done = (r) => {
+      if (resolved) return;
+      resolved = true;
+      URL.revokeObjectURL(url);
+      v.src = '';
+      resolve(r);
     };
+
+    const timer = setTimeout(() => done(null), 12000);
+
+    const tryCapture = () => {
+      try {
+        if (!v.videoWidth || !v.videoHeight) return false;
+        const canvas = document.createElement('canvas');
+        canvas.width = v.videoWidth;
+        canvas.height = v.videoHeight;
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(v, 0, 0, canvas.width, canvas.height);
+
+        // Verify frame contains actual pixels (not fully transparent canvas)
+        const sample = ctx.getImageData(Math.floor(canvas.width / 2), Math.floor(canvas.height / 2), 1, 1).data;
+        if (sample[3] === 0) return false;
+
+        createImageBitmap(canvas).then((bitmap) => {
+          clearTimeout(timer);
+          done({ bitmap, w: v.videoWidth, h: v.videoHeight });
+        }).catch(() => done(null));
+        return true;
+      } catch {
+        done(null);
+        return true;
+      }
+    };
+
+    v.onerror = () => { clearTimeout(timer); done(null); };
+    v.onloadedmetadata = () => {
+      v.currentTime = Math.min(1, (v.duration || 1) * 0.2);
+    };
+    v.onseeked = () => {
+      if ('requestVideoFrameCallback' in v) {
+        v.requestVideoFrameCallback(() => {
+          if (!tryCapture()) setTimeout(tryCapture, 150);
+        });
+      } else {
+        setTimeout(tryCapture, 100);
+      }
+    };
+
+    v.src = url;
   });
 }
 

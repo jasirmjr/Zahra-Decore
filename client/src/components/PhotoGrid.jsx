@@ -8,9 +8,11 @@ import { CloseIcon, ChevronLeft, ChevronRight } from './Icons';
 
 export function UploadedPhoto({ item, className = '', imgClassName = '', fill = false, eager = false, aspect = '4 / 3' }) {
   const [loaded, setLoaded] = useState(false);
+  const isVid = Boolean(item.video);
+
   return (
     <div
-      className={`relative overflow-hidden bg-cream ${className}`}
+      className={`relative overflow-hidden bg-neutral-900 ${className}`}
       style={{
         aspectRatio: fill ? undefined : aspect,
         backgroundImage: item.blur ? `url(${item.blur})` : undefined,
@@ -18,7 +20,16 @@ export function UploadedPhoto({ item, className = '', imgClassName = '', fill = 
         backgroundPosition: 'center',
       }}
     >
-      {(item.thumb || item.image) ? (
+      {isVid ? (
+        <video
+          src={`${item.video}#t=0.5`}
+          poster={item.thumb || item.image}
+          preload="metadata"
+          muted
+          playsInline
+          className={`pointer-events-none absolute inset-0 h-full w-full object-cover ${imgClassName}`}
+        />
+      ) : (item.thumb || item.image) ? (
         <img
           src={item.thumb || item.image}
           alt={item.caption || item.name || ''}
@@ -27,12 +38,15 @@ export function UploadedPhoto({ item, className = '', imgClassName = '', fill = 
           width={item.w}
           height={item.h}
           onLoad={() => setLoaded(true)}
-          className={`absolute inset-0 h-full w-full object-cover transition-opacity duration-500 ${loaded ? 'opacity-100' : 'opacity-0'} ${imgClassName}`}
+          className={`absolute inset-0 h-full w-full object-cover transition-opacity duration-300 ${loaded ? 'opacity-100' : 'opacity-90'} ${imgClassName}`}
         />
-      ) : item.video && <div className="absolute inset-0 bg-neutral-800" />}
-      {item.video && (
+      ) : (
+        <div className="absolute inset-0 bg-neutral-800" />
+      )}
+
+      {isVid && (
         <span className="pointer-events-none absolute inset-0 grid place-items-center">
-          <span className="grid h-12 w-12 sm:h-14 sm:w-14 place-items-center rounded-full bg-black/55 text-white backdrop-blur-sm transition-transform duration-300 group-hover:scale-110">
+          <span className="grid h-12 w-12 sm:h-14 sm:w-14 place-items-center rounded-full bg-black/60 text-white backdrop-blur-sm shadow-md transition-transform duration-300 group-hover:scale-110">
             <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5.5v13l11-6.5z" /></svg>
           </span>
         </span>

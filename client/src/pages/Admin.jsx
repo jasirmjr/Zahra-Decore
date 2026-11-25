@@ -193,9 +193,11 @@ function Manager({ endpoint, fields, title, onAuthError, videos = false, multipl
           {items.map((it) => (
             <div key={it.id} className="bg-white shadow-sm">
               <div className="relative aspect-square bg-neutral-800">
-                {(it.thumb || it.image)
-                  ? <img src={it.thumb || it.image} alt="" loading="lazy" className="h-full w-full object-cover" />
-                  : it.video && <video src={it.video} muted preload="metadata" className="h-full w-full object-cover" />}
+                {it.video ? (
+                  <video src={`${it.video}#t=0.5`} poster={it.thumb || it.image} muted playsInline preload="metadata" className="h-full w-full object-cover" />
+                ) : (it.thumb || it.image) ? (
+                  <img src={it.thumb || it.image} alt="" loading="lazy" className="h-full w-full object-cover" />
+                ) : null}
                 {it.video && <span className="absolute left-2 top-2 rounded bg-black/70 px-2 py-0.5 text-xs text-white">▶ Video</span>}
               </div>
               <div className="p-3 text-sm">
