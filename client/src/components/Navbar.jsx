@@ -33,7 +33,7 @@ export default function Navbar() {
     <header className={`fixed inset-x-0 top-0 z-40 w-full border-b border-black/5 bg-white transition-shadow ${scrolled || open ? 'shadow-[0_6px_24px_-12px_rgba(0,0,0,0.25)]' : ''}`}>
       <nav className="wrap flex h-16 sm:h-18 md:h-20 items-center justify-between">
         <Link to="/" aria-label="Zahra Decor home">
-          <img src="/logo.webp" alt="Zahra Decor" className="h-12 sm:h-14 md:h-16 w-auto object-contain" />
+          <img src="/logo.webp" alt="Zahra Decor" className="h-14 sm:h-16 md:h-[72px] w-auto object-contain" />
         </Link>
 
         <ul className="hidden items-center gap-8 lg:flex xl:gap-10">

@@ -9,7 +9,7 @@ export default function Footer() {
     <footer className="w-full border-t border-black/5 bg-white">
       <div className="wrap grid gap-8 py-10 sm:py-12 md:py-14 grid-cols-2 md:grid-cols-4 lg:grid-cols-[1.3fr_1fr_1.4fr_1fr]">
         <div className="col-span-2 sm:col-span-1">
-          <img src="/logo.webp" alt="Zahra Decor" className="h-14 sm:h-16 md:h-20 w-auto object-contain" />
+          <img src="/logo.webp" alt="Zahra Decor" className="h-20 sm:h-24 md:h-28 w-auto object-contain" />
           <p className="mt-3 max-w-xs text-xs sm:text-sm text-muted">
             Interior products & custom furniture — designed and manufactured by us.
           </p>

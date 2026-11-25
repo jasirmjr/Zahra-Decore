@@ -19,7 +19,7 @@ function Login({ onLogin }) {
   return (
     <div className="grid min-h-screen place-items-center bg-neutral-50 px-4">
       <form onSubmit={submit} className="w-full max-w-sm bg-white p-8 shadow-sm">
-        <img src="/logo.webp" alt="Zahra Decor" className="mx-auto h-24" />
+        <img src="/logo.webp" alt="Zahra Decor" className="mx-auto h-32" />
         <h1 className="mt-4 text-center font-serif text-2xl">Admin Panel</h1>
         <input type="password" className="input mt-6" placeholder="Password" value={password}
           onChange={(e) => setPassword(e.target.value)} autoFocus />
@@ -279,7 +279,7 @@ export default function Admin() {
       <header className="border-b border-neutral-200 bg-white">
         <div className="mx-auto flex max-w-[1600px] items-center justify-between px-4 py-3 md:px-8">
           <div className="flex items-center gap-3">
-            <img src="/logo.webp" alt="" className="h-12" />
+            <img src="/logo.webp" alt="" className="h-14" />
             <span className="font-serif text-lg">Admin</span>
           </div>
           <div className="flex items-center gap-5 text-sm">

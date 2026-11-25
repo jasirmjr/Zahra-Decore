@@ -168,7 +168,7 @@ export default function Home() {
           <div className="wrap">
             <div className="flex flex-wrap items-end justify-between gap-6">
               <SectionHead eyebrow="Our Projects" title="Interiors brought to life" />
-              <Link to="/projects" className="btn-outline">All Projects <ArrowCircle dark /></Link>
+              <Link to="/projects" className="btn-outline !px-5 sm:!px-6">All Projects</Link>
             </div>
             <div className="mt-8 sm:mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
               {works.slice(0, 3).map((w) => (
@@ -176,9 +176,8 @@ export default function Home() {
                   <div className="overflow-hidden rounded-xl sm:rounded-2xl">
                     <UploadedPhoto item={w} fill className="aspect-[4/3]" imgClassName="transition duration-700 group-hover:scale-105" />
                   </div>
-                  <div className="flex items-center justify-between gap-3 px-1 pt-3">
+                  <div className="px-1 pt-3">
                     <h3 className="text-base sm:text-lg font-bold text-ink">{w.caption || 'Our project'}</h3>
-                    <ArrowCircle dark />
                   </div>
                 </Link>
               ))}

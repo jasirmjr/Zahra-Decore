@@ -2,7 +2,7 @@
 // Run again whenever you add a new photo:   npm run images
 //
 //   image-originals/sofa-brown.jpg  ->  client/public/images/sofa-brown-640.webp, -960, -1280, -1920, -2560
-//   image-originals/logo.png        ->  client/public/logo.webp (+ small favicon.png)
+//   image-originals/logo.png        ->  client/public/logo.webp (+ favicon.png, apple-touch-icon.png)
 import sharp from 'sharp';
 import fs from 'node:fs';
 import path from 'node:path';
@@ -24,8 +24,10 @@ for (const file of fs.readdirSync(SRC)) {
 
   if (name === 'logo') {
     const out = path.join(ROOT, 'client', 'public', 'logo.webp');
-    await sharp(input).resize({ height: 300, withoutEnlargement: true }).webp({ quality: 90, alphaQuality: 100, effort: 6 }).toFile(out);
-    await sharp(input).resize(64, 64, { fit: 'contain', background: { r: 0, g: 0, b: 0, alpha: 0 } }).png({ compressionLevel: 9 }).toFile(path.join(ROOT, 'client', 'public', 'favicon.png'));
+    // trim() removes empty transparent margins so the logo fills its space
+    await sharp(input).trim().resize({ height: 300, withoutEnlargement: true }).webp({ quality: 90, alphaQuality: 100, effort: 6 }).toFile(out);
+    await sharp(input).trim().resize(64, 64, { fit: 'contain', background: { r: 0, g: 0, b: 0, alpha: 0 } }).png({ compressionLevel: 9 }).toFile(path.join(ROOT, 'client', 'public', 'favicon.png'));
+    await sharp(input).trim().resize(180, 180, { fit: 'contain', background: '#ffffff' }).flatten({ background: '#ffffff' }).png({ compressionLevel: 9 }).toFile(path.join(ROOT, 'client', 'public', 'apple-touch-icon.png'));
     after += fs.statSync(out).size;
     console.log(`logo  -> ${kb(fs.statSync(out).size)}`);
     continue;
