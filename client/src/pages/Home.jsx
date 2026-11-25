@@ -4,6 +4,7 @@ import { api } from '../api';
 import { CATEGORIES, DEFAULT_HERO, SITE, waLink } from '../config';
 import { WhatsAppIcon, ArrowCircle, ShieldIcon, RulerIcon, ClockIcon } from '../components/Icons';
 import Photo from '../components/Photo';
+import { UploadedPhoto } from '../components/PhotoGrid';
 import AboutContent from '../components/AboutContent';
 import { SectionHead, Process, CtaBanner } from '../components/Sections';
 
@@ -21,6 +22,14 @@ export default function Home() {
     api('/settings').then((s) => setHero(s.heroImage || DEFAULT_HERO)).catch(() => setHero(DEFAULT_HERO));
     api('/works').then(setWorks).catch(() => {});
   }, []);
+
+  const videoWorks = works.filter((w) => w.video);
+  const showcaseVideos = videoWorks.length > 0 ? videoWorks.slice(0, 2) : (
+    works.length === 0 ? [
+      { id: '1', video: '/work-video-1.mp4', image: '/work-video-1-poster.jpg' },
+      { id: '2', video: '/work-video-2.mp4', image: '/work-video-2-poster.jpg' },
+    ] : []
+  );
 
   const coverFor = (cat) => cat.image;
 
@@ -122,59 +131,53 @@ export default function Home() {
       </section>
 
       {/* ================= SHOWCASE WORKS (VIDEOS) ================= */}
-      <section className="w-full scroll-mt-20 bg-white py-10 sm:py-14 md:py-16">
-        <div className="wrap">
-          <div className="flex flex-wrap items-end justify-between gap-4">
-            <SectionHead eyebrow="Our Works" title="Craftsmanship in motion">
-              Take a look inside our workshop and see our finished interior installations in real homes.
-            </SectionHead>
-            <Link to="/works" className="btn-gold">
-              See All Works <ArrowCircle />
-            </Link>
-          </div>
+      {showcaseVideos.length > 0 && (
+        <section className="w-full scroll-mt-20 bg-white py-10 sm:py-14 md:py-16">
+          <div className="wrap">
+            <div className="flex flex-wrap items-end justify-between gap-4">
+              <SectionHead eyebrow="Our Projects" title="Craftsmanship in motion">
+                Take a look inside our workshop and see our finished interior installations in real homes.
+              </SectionHead>
+              <Link to="/projects" className="btn-gold">
+                See All Projects <ArrowCircle />
+              </Link>
+            </div>
 
-          <div className="mt-6 sm:mt-8 md:mt-10 grid grid-cols-1 gap-6 md:grid-cols-2 md:gap-8">
-            <video
-              controls
-              playsInline
-              preload="metadata"
-              poster="/work-video-1-poster.jpg"
-              className="aspect-video w-full object-cover"
-            >
-              <source src="/work-video-1.mp4" type="video/mp4" />
-              Your browser does not support the video tag.
-            </video>
-
-            <video
-              controls
-              playsInline
-              preload="metadata"
-              poster="/work-video-2-poster.jpg"
-              className="aspect-video w-full object-cover"
-            >
-              <source src="/work-video-2.mp4" type="video/mp4" />
-              Your browser does not support the video tag.
-            </video>
+            <div className={`mt-6 sm:mt-8 md:mt-10 grid grid-cols-1 gap-6 ${showcaseVideos.length > 1 ? 'md:grid-cols-2 md:gap-8' : ''}`}>
+              {showcaseVideos.map((v) => (
+                <video
+                  key={v.id || v.video}
+                  controls
+                  playsInline
+                  preload="none"
+                  poster={v.image || v.thumb}
+                  className="aspect-video w-full rounded-xl sm:rounded-2xl object-cover"
+                >
+                  <source src={v.video} type="video/mp4" />
+                  Your browser does not support the video tag.
+                </video>
+              ))}
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
+      )}
 
       {/* ================= RECENT WORKS ================= */}
       {works.length > 0 && (
-        <section className="w-full py-20">
+        <section className="w-full py-16 sm:py-20">
           <div className="wrap">
             <div className="flex flex-wrap items-end justify-between gap-6">
-              <SectionHead eyebrow="Our Works" title="Interiors brought to life" />
-              <Link to="/works" className="btn-outline">All Works <ArrowCircle dark /></Link>
+              <SectionHead eyebrow="Our Projects" title="Interiors brought to life" />
+              <Link to="/projects" className="btn-outline">All Projects <ArrowCircle dark /></Link>
             </div>
-            <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            <div className="mt-8 sm:mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
               {works.slice(0, 3).map((w) => (
-                <Link to="/works" key={w.id} className="group rounded-3xl bg-white p-3 transition hover:shadow-xl">
-                  <div className="aspect-[4/3] overflow-hidden rounded-2xl">
-                    <img src={w.image} alt={w.caption} loading="lazy" className="h-full w-full object-cover transition duration-700 group-hover:scale-105" />
+                <Link to="/projects" key={w.id} className="group">
+                  <div className="overflow-hidden rounded-xl sm:rounded-2xl">
+                    <UploadedPhoto item={w} fill className="aspect-[4/3]" imgClassName="transition duration-700 group-hover:scale-105" />
                   </div>
-                  <div className="flex items-center justify-between gap-3 px-2 pb-1 pt-4">
-                    <h3 className="text-lg">{w.caption || 'Our project'}</h3>
+                  <div className="flex items-center justify-between gap-3 px-1 pt-3">
+                    <h3 className="text-base sm:text-lg font-bold text-ink">{w.caption || 'Our project'}</h3>
                     <ArrowCircle dark />
                   </div>
                 </Link>

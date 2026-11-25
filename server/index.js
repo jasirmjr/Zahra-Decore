@@ -3,7 +3,10 @@
 import express from 'express';
 import multer from 'multer';
 import crypto from 'node:crypto';
+import fs from 'node:fs';
+import path from 'node:path';
 import { put, del, list } from '@vercel/blob';
+import { handleUpload } from '@vercel/blob/client';
 
 const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || 'zahra123';
 const TOKEN_DAYS = 30;
@@ -64,30 +67,145 @@ app.post('/api/login', (req, res) => {
 });
 app.get('/api/check', auth, (_req, res) => res.json({ ok: true }));
 
-// Generic CRUD for image collections (works + products)
-function collection(name, fields) {
-  app.get(`/api/${name}`, wrap(async (_req, res) => { publicCache(res); res.json(await read(name, [])); }));
+// ---------- direct uploads (photos + videos) ----------
+// The admin browser uploads files straight to Vercel Blob, so videos are not limited by
+// Vercel's 4.5 MB request size. This route only hands out a short-lived upload permission.
+const MAX_UPLOAD_MB = 500;
+app.post('/api/upload', auth, wrap(async (req, res) => {
+  res.json(await handleUpload({
+    request: req,
+    body: req.body,
+    onBeforeGenerateToken: async (pathname) => {
+      if (!pathname.startsWith('uploads/')) throw new Error('Invalid upload path');
+      return {
+        allowedContentTypes: ['image/*', 'video/*'],
+        maximumSizeInBytes: MAX_UPLOAD_MB * 1024 * 1024,
+        addRandomSuffix: true,
+        cacheControlMaxAge: 60 * 60 * 24 * 365,
+      };
+    },
+  }));
+}));
 
-  app.post(`/api/${name}`, auth, upload.single('image'), wrap(async (req, res) => {
-    if (!req.file) return res.status(400).json({ error: 'Please choose an image' });
-    const item = { id: crypto.randomUUID(), image: await saveUpload(req.file), createdAt: Date.now() };
-    for (const f of fields) item[f] = (req.body[f] || '').trim();
-    const list = await read(name, []);
-    list.unshift(item);
-    await write(name, list);
+// ---------- collections (projects + gallery + products) ----------
+// After uploading, the browser sends one item: { image, thumb?, video?, w?, h?, blur?, ...fields }.
+//  photo: image = full quality, thumb = small grid version
+//  video: video = the file, image/thumb = a poster frame (if the browser could make one)
+const num = (v) => (Number(v) > 0 ? Math.round(Number(v)) : undefined);
+const blobUrl = (v) => (typeof v === 'string' && /^https:\/\/[a-z0-9.-]+\.blob\.vercel-storage\.com\//i.test(v) ? v : undefined);
+
+const DEFAULT_PUBLIC_WORKS = [
+  {
+    id: 'public-work-video-1',
+    type: 'video',
+    video: '/work-video-1.mp4',
+    image: '/work-video-1-poster.jpg',
+    thumb: '/work-video-1-poster.jpg',
+    caption: 'In-House Manufacturing',
+    w: 1280,
+    h: 720,
+    createdAt: 1700000000000,
+  },
+  {
+    id: 'public-work-video-2',
+    type: 'video',
+    video: '/work-video-2.mp4',
+    image: '/work-video-2-poster.jpg',
+    thumb: '/work-video-2-poster.jpg',
+    caption: 'Completed Interior Installation',
+    w: 1280,
+    h: 720,
+    createdAt: 1700000001000,
+  },
+];
+
+async function getCollectionItems(name) {
+  if (name === 'works') {
+    const items = await read('works', null);
+    const deleted = await read('deleted-works', []);
+    let list = items;
+    if (list === null) {
+      list = DEFAULT_PUBLIC_WORKS.filter((d) => !deleted.includes(d.id));
+      await write('works', list);
+      return list;
+    }
+    let changed = false;
+    for (const def of DEFAULT_PUBLIC_WORKS) {
+      if (!deleted.includes(def.id) && !list.some((item) => item.id === def.id || item.video === def.video)) {
+        list.push(def);
+        changed = true;
+      }
+    }
+    if (changed) {
+      await write('works', list);
+    }
+    return list;
+  }
+  return await read(name, []);
+}
+
+function collection(name, fields, { videos = false } = {}) {
+  app.get(`/api/${name}`, wrap(async (_req, res) => {
+    publicCache(res);
+    res.json(await getCollectionItems(name));
+  }));
+
+  app.post(`/api/${name}`, auth, wrap(async (req, res) => {
+    const b = req.body || {};
+    const video = videos ? blobUrl(b.video) : undefined;
+    const image = blobUrl(b.image);
+    if (!image && !video) return res.status(400).json({ error: 'Please choose a photo' + (videos ? ' or video' : '') });
+    const item = {
+      id: crypto.randomUUID(),
+      type: video ? 'video' : 'image',
+      image, video,
+      thumb: blobUrl(b.thumb),
+      w: num(b.w), h: num(b.h),
+      blur: /^data:image\/(webp|jpeg);base64,[A-Za-z0-9+/=]{1,4000}$/.test(b.blur || '') ? b.blur : undefined,
+      createdAt: Date.now(),
+    };
+    for (const f of fields) item[f] = String(b[f] || '').trim().slice(0, 200);
+    const items = await getCollectionItems(name);
+    items.unshift(item);
+    await write(name, items);
     res.status(201).json(item);
   }));
 
   app.delete(`/api/${name}/:id`, auth, wrap(async (req, res) => {
-    const list = await read(name, []);
-    const item = list.find((i) => i.id === req.params.id);
+    const items = await getCollectionItems(name);
+    const item = items.find((i) => i.id === req.params.id);
     if (!item) return res.status(404).json({ error: 'Not found' });
-    await removeUpload(item.image);
-    await write(name, list.filter((i) => i.id !== item.id));
+
+    // Track deletion of public default works so they won't re-seed
+    if (name === 'works' && req.params.id.startsWith('public-work-video-')) {
+      const deleted = await read('deleted-works', []);
+      if (!deleted.includes(req.params.id)) {
+        deleted.push(req.params.id);
+        await write('deleted-works', deleted);
+      }
+      try {
+        const pubDir = path.resolve(process.cwd(), 'client/public');
+        if (item.video && item.video.startsWith('/')) {
+          const vPath = path.join(pubDir, item.video.replace(/^\//, ''));
+          if (fs.existsSync(vPath)) fs.unlinkSync(vPath);
+        }
+        if (item.image && item.image.startsWith('/')) {
+          const pPath = path.join(pubDir, item.image.replace(/^\//, ''));
+          if (fs.existsSync(pPath)) fs.unlinkSync(pPath);
+        }
+      } catch {
+        // Non-fatal
+      }
+    }
+
+    await Promise.all([removeUpload(item.image), removeUpload(item.thumb), removeUpload(item.video)]);
+    await write(name, items.filter((i) => i.id !== item.id));
     res.json({ ok: true });
   }));
 }
-collection('works', ['caption']);
+// "works" is shown on the site as "Projects" (kept as "works" so existing uploads stay)
+collection('works', ['caption'], { videos: true });
+collection('gallery', ['caption', 'category'], { videos: true });
 collection('products', ['name', 'category', 'price']);
 
 // Site settings (hero image)

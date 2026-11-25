@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { api, getToken, setToken } from '../api';
 import { CATEGORIES, DEFAULT_HERO } from '../config';
+import { uploadMedia, isVideo, MAX_VIDEO_MB } from '../upload';
 
 /* ---------------- Login ---------------- */
 function Login({ onLogin }) {
@@ -46,35 +47,112 @@ function ImagePicker({ file, setFile }) {
   );
 }
 
+/* ---------------- Multi-file picker (photos + videos) ---------------- */
+const mb = (n) => `${(n / 1024 / 1024).toFixed(1)} MB`;
+
+function FileThumb({ file }) {
+  const [url, setUrl] = useState(null);
+  useEffect(() => {
+    const u = URL.createObjectURL(file);
+    setUrl(u);
+    return () => URL.revokeObjectURL(u);
+  }, [file]);
+  if (!url) return <div className="h-14 w-14 shrink-0 bg-neutral-100" />;
+  return isVideo(file)
+    ? <video src={url} muted preload="metadata" className="h-14 w-14 shrink-0 bg-black object-cover" />
+    : <img src={url} alt="" className="h-14 w-14 shrink-0 object-cover" />;
+}
+
+function FilePicker({ entries, setEntries, videos, multiple, busy }) {
+  const add = (list) => {
+    const files = [...list].filter((f) => f.type.startsWith('image/') || (videos && isVideo(f)));
+    const next = files.map((file) => ({ key: `${file.name}-${file.size}-${Math.random()}`, file, progress: 0, status: 'ready' }));
+    setEntries((cur) => (multiple ? [...cur.filter((e) => e.status !== 'done'), ...next] : next.slice(0, 1)));
+  };
+  return (
+    <div>
+      <label
+        onDragOver={(e) => e.preventDefault()}
+        onDrop={(e) => { e.preventDefault(); if (!busy) add(e.dataTransfer.files); }}
+        className="flex min-h-32 cursor-pointer flex-col items-center justify-center gap-1 border-2 border-dashed border-neutral-300 bg-neutral-50 p-4 text-center text-sm text-neutral-500 hover:border-gold">
+        <span className="font-medium text-ink">Click to choose {videos ? 'photos & videos' : multiple ? 'photos' : 'a photo'}</span>
+        <span className="text-xs">{multiple ? 'You can select many files at once, or drag & drop them here' : 'or drag & drop it here'}</span>
+        {videos && <span className="text-xs">Videos: MP4 works best · up to {MAX_VIDEO_MB} MB each</span>}
+        <input type="file" multiple={multiple} disabled={busy} className="hidden"
+          accept={videos ? 'image/*,video/*' : 'image/*'}
+          onChange={(e) => { add(e.target.files); e.target.value = ''; }} />
+      </label>
+
+      {entries.length > 0 && (
+        <ul className="mt-3 max-h-80 space-y-2 overflow-y-auto">
+          {entries.map((en) => (
+            <li key={en.key} className="flex items-center gap-3 bg-neutral-50 p-2">
+              <FileThumb file={en.file} />
+              <div className="min-w-0 flex-1 text-xs">
+                <p className="truncate font-medium text-ink">{isVideo(en.file) ? 'Video · ' : 'Photo · '}{en.file.name}</p>
+                <p className={en.status === 'error' ? 'text-red-600' : 'text-neutral-500'}>
+                  {en.status === 'ready' && mb(en.file.size)}
+                  {en.status === 'uploading' && `Uploading… ${Math.round(en.progress)}%`}
+                  {en.status === 'done' && 'Uploaded ✓'}
+                  {en.status === 'error' && en.error}
+                </p>
+                {en.status === 'uploading' && (
+                  <div className="mt-1 h-1 bg-neutral-200"><div className="h-full bg-gold transition-all" style={{ width: `${en.progress}%` }} /></div>
+                )}
+              </div>
+              {!busy && en.status !== 'done' && (
+                <button type="button" onClick={() => setEntries((cur) => cur.filter((x) => x.key !== en.key))}
+                  className="px-2 text-lg leading-none text-neutral-400 hover:text-red-600" aria-label="Remove">×</button>
+              )}
+            </li>
+          ))}
+        </ul>
+      )}
+    </div>
+  );
+}
+
 /* ---------------- Generic collection manager ---------------- */
-function Manager({ endpoint, fields, title, onAuthError }) {
+// videos: allow video files too · multiple: allow many files in one go (each becomes its own item)
+function Manager({ endpoint, fields, title, onAuthError, videos = false, multiple = false }) {
   const [items, setItems] = useState([]);
-  const [file, setFile] = useState(null);
+  const [entries, setEntries] = useState([]);
   const [form, setForm] = useState({});
   const [busy, setBusy] = useState(false);
   const [msg, setMsg] = useState('');
 
   const load = () => api(`/${endpoint}`, { fresh: true }).then(setItems);
-  useEffect(() => { load(); setForm({}); setFile(null); setMsg(''); }, [endpoint]);
+  useEffect(() => { load(); setForm({}); setEntries([]); setMsg(''); }, [endpoint]);
 
   const handle = async (fn) => {
     try { await fn(); } catch (e) { if (e.status === 401) onAuthError(); else setMsg(e.message); }
   };
+  const patch = (key, changes) => setEntries((cur) => cur.map((e) => (e.key === key ? { ...e, ...changes } : e)));
 
-  const submit = (e) => {
+  const submit = async (e) => {
     e.preventDefault();
-    if (!file) return setMsg('Please choose an image');
+    const todo = entries.filter((en) => en.status !== 'done');
+    if (!todo.length) return setMsg(`Please choose ${videos ? 'photos or videos' : 'a photo'}`);
     const missing = fields.find((f) => f.required && !form[f.name]);
     if (missing) return setMsg(`Please fill ${missing.label}`);
-    setBusy(true);
-    handle(async () => {
-      const fd = new FormData();
-      fd.append('image', file);
-      fields.forEach((f) => fd.append(f.name, form[f.name] || ''));
-      await api(`/${endpoint}`, { method: 'POST', body: fd, auth: true });
-      setFile(null); setForm({}); setMsg('Uploaded ✓');
-      await load();
-    }).finally(() => setBusy(false));
+    setBusy(true); setMsg('');
+    let ok = 0;
+    for (const en of todo) {
+      patch(en.key, { status: 'uploading', progress: 0, error: undefined });
+      try {
+        const media = await uploadMedia(en.file, (p) => patch(en.key, { progress: p }));
+        await api(`/${endpoint}`, { method: 'POST', body: { ...form, ...media }, auth: true });
+        patch(en.key, { status: 'done', progress: 100 });
+        ok++;
+      } catch (err) {
+        if (err.status === 401) { setBusy(false); onAuthError(); return; }
+        patch(en.key, { status: 'error', error: err.message || 'Upload failed' });
+      }
+    }
+    setBusy(false);
+    setMsg(ok === todo.length ? `${ok} file(s) uploaded ✓` : `${ok} of ${todo.length} uploaded — see errors above`);
+    if (ok === todo.length) setForm({});
+    await load().catch(() => {});
   };
 
   const remove = (id) => {
@@ -82,11 +160,13 @@ function Manager({ endpoint, fields, title, onAuthError }) {
     handle(async () => { await api(`/${endpoint}/${id}`, { method: 'DELETE', auth: true }); await load(); });
   };
 
+  const pending = entries.filter((en) => en.status !== 'done').length;
   return (
-    <div className="grid gap-10 lg:grid-cols-[360px_1fr]">
+    <div className="grid gap-10 lg:grid-cols-[400px_1fr]">
       <form onSubmit={submit} className="h-fit space-y-4 bg-white p-6 shadow-sm">
         <h2 className="font-serif text-xl">Add {title}</h2>
-        <ImagePicker file={file} setFile={setFile} />
+        <FilePicker entries={entries} setEntries={setEntries} videos={videos} multiple={multiple} busy={busy} />
+        {multiple && fields.length > 0 && <p className="text-xs text-neutral-500">The details below are applied to every file in this upload.</p>}
         {fields.map((f) => (
           <div key={f.name}>
             <label className="mb-1 block text-xs tracking-wider uppercase text-neutral-500">{f.label}</label>
@@ -102,7 +182,9 @@ function Manager({ endpoint, fields, title, onAuthError }) {
           </div>
         ))}
         {msg && <p className="text-sm text-gold-dark">{msg}</p>}
-        <button disabled={busy} className="btn-gold w-full disabled:opacity-50">{busy ? 'Uploading…' : 'Upload'}</button>
+        <button disabled={busy} className="btn-gold w-full disabled:opacity-50">
+          {busy ? 'Uploading… keep this page open' : pending > 1 ? `Upload ${pending} files` : 'Upload'}
+        </button>
       </form>
 
       <div>
@@ -110,7 +192,12 @@ function Manager({ endpoint, fields, title, onAuthError }) {
         <div className="grid grid-cols-2 gap-4 md:grid-cols-3 xl:grid-cols-4">
           {items.map((it) => (
             <div key={it.id} className="bg-white shadow-sm">
-              <img src={it.image} alt="" className="aspect-square w-full object-cover" />
+              <div className="relative aspect-square bg-neutral-800">
+                {(it.thumb || it.image)
+                  ? <img src={it.thumb || it.image} alt="" loading="lazy" className="h-full w-full object-cover" />
+                  : it.video && <video src={it.video} muted preload="metadata" className="h-full w-full object-cover" />}
+                {it.video && <span className="absolute left-2 top-2 rounded bg-black/70 px-2 py-0.5 text-xs text-white">▶ Video</span>}
+              </div>
               <div className="p-3 text-sm">
                 <p className="truncate font-medium">{it.name || it.caption || '—'}</p>
                 {it.category && <p className="text-xs text-neutral-500">{it.category}{it.price ? ` · ${it.price}` : ''}</p>}
@@ -168,7 +255,8 @@ function HeroManager({ onAuthError }) {
 /* ---------------- Page ---------------- */
 const TABS = [
   { id: 'products', label: 'Products (Shop)' },
-  { id: 'works', label: 'Works Gallery' },
+  { id: 'works', label: 'Projects' },
+  { id: 'gallery', label: 'Gallery' },
   { id: 'hero', label: 'Hero Image' },
 ];
 
@@ -218,8 +306,14 @@ export default function Admin() {
           ]} />
         )}
         {tab === 'works' && (
-          <Manager endpoint="works" title="work" onAuthError={logout} fields={[
+          <Manager endpoint="works" title="project photos & videos" videos multiple onAuthError={logout} fields={[
             { name: 'caption', label: 'Caption / name', placeholder: 'e.g. Villa living room, Kochi' },
+          ]} />
+        )}
+        {tab === 'gallery' && (
+          <Manager endpoint="gallery" title="gallery photos & videos" videos multiple onAuthError={logout} fields={[
+            { name: 'caption', label: 'Caption (optional)', placeholder: 'e.g. Gypsum ceiling with cove lights' },
+            { name: 'category', label: 'Category (optional)', options: CATEGORIES.map((c) => c.name) },
           ]} />
         )}
         {tab === 'hero' && <HeroManager onAuthError={logout} />}

@@ -17,7 +17,7 @@ export default function Footer() {
         <div>
           <h4 className="mb-3 text-sm sm:text-base font-bold text-ink">Navigation</h4>
           <ul className="space-y-0.5 text-sm font-medium text-muted">
-            {[['/', 'Home'], ['/about', 'About Us'], ['/services', 'Services'], ['/works', 'Works'], ['/contact', 'Contact']].map(([to, l]) => (
+            {[['/', 'Home'], ['/about', 'About Us'], ['/services', 'Services'], ['/projects', 'Projects'], ['/gallery', 'Gallery'], ['/contact', 'Contact']].map(([to, l]) => (
               <li key={to}><Link to={to} className="inline-block py-1.5 hover:text-gold">{l}</Link></li>
             ))}
           </ul>

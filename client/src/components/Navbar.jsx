@@ -6,7 +6,8 @@ import { waLink } from '../config';
 const LINKS = [
   { to: '/about', label: 'About Us' },
   { to: '/services', label: 'Services' },
-  { to: '/works', label: 'Works' },
+  { to: '/projects', label: 'Projects' },
+  { to: '/gallery', label: 'Gallery' },
   { to: '/contact', label: 'Contact' },
 ];
 

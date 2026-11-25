@@ -1,14 +1,17 @@
-import { useEffect } from 'react';
-import { Routes, Route, useLocation } from 'react-router-dom';
+import { lazy, Suspense, useEffect } from 'react';
+import { Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import FloatingWhatsApp from './components/FloatingWhatsApp';
 import Home from './pages/Home';
-import About from './pages/About';
-import Services from './pages/Services';
-import Works from './pages/Works';
-import Contact from './pages/Contact';
-import Admin from './pages/Admin';
+
+// Home loads with the site; other pages download only when visited (keeps the first load small)
+const About = lazy(() => import('./pages/About'));
+const Services = lazy(() => import('./pages/Services'));
+const Projects = lazy(() => import('./pages/Projects'));
+const Gallery = lazy(() => import('./pages/Gallery'));
+const Contact = lazy(() => import('./pages/Contact'));
+const Admin = lazy(() => import('./pages/Admin'));
 
 function ScrollToTop() {
   const { pathname, hash } = useLocation();
@@ -27,15 +30,19 @@ export default function App() {
       <ScrollToTop />
       {!isAdmin && <Navbar />}
       <main className="min-h-screen">
+        <Suspense fallback={<div className="min-h-screen" />}>
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/about" element={<About />} />
           <Route path="/services" element={<Services />} />
-          <Route path="/works" element={<Works />} />
+          <Route path="/projects" element={<Projects />} />
+          <Route path="/works" element={<Navigate to="/projects" replace />} />
+          <Route path="/gallery" element={<Gallery />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/admin" element={<Admin />} />
           <Route path="*" element={<Home />} />
         </Routes>
+        </Suspense>
       </main>
       {!isAdmin && <Footer />}
       {!isAdmin && <FloatingWhatsApp />}
