@@ -43,7 +43,7 @@ export default function Home() {
             Beautiful furniture, <span className="text-gold-light">made for your home</span>
           </h1>
           <p className="fade-up mt-3 sm:mt-5 max-w-xl text-sm sm:text-base md:text-lg text-white/90" style={{ animationDelay: '.2s' }}>
-            Sofas, beds, curtains, dining sets, wardrobes and custom furniture designed and manufactured in our own workshop.
+            Metal cots, premium sofas, curtains, dining tables and every home decor item — plus gypsum and wallpaper works — customised to your needs.
           </p>
           <div className="fade-up mt-6 sm:mt-8 flex flex-wrap items-center gap-3 sm:gap-4" style={{ animationDelay: '.3s' }}>
             <a
@@ -54,12 +54,7 @@ export default function Home() {
             >
               <WhatsAppIcon width={18} className="text-[#25D366]" /> Enquire on WhatsApp <ArrowCircle dark />
             </a>
-            <a
-              href="#shop"
-              className="btn bg-white text-ink shadow-lg transition hover:bg-gold hover:text-white"
-            >
-              Our Collections <ArrowCircle dark />
-            </a>
+            
           </div>
         </div>
 
@@ -95,21 +90,24 @@ export default function Home() {
           </div>
 
           <div className="mt-6 sm:mt-8 md:mt-10 grid grid-cols-2 gap-2.5 sm:gap-4 md:grid-cols-3 md:gap-5">
-            {CATEGORIES.map((cat) => (
+            {CATEGORIES.map((cat, i) => (
               <a
                 key={cat.name}
                 href={waLink(`Hello ${SITE.name}, I would like to enquire about ${cat.name}. Please share designs and prices.`)}
                 target="_blank"
                 rel="noreferrer"
-                className="group relative aspect-[4/3] overflow-hidden rounded-xl sm:rounded-2xl text-left shadow-xs transition hover:shadow-xl"
+                className={`group relative overflow-hidden rounded-xl sm:rounded-2xl text-left shadow-xs transition hover:shadow-xl ${
+                  // an odd last card fills the rest of its row instead of leaving a gap
+                  i === CATEGORIES.length - 1 && CATEGORIES.length % 2 ? 'col-span-2 aspect-[8/3] md:aspect-auto' : 'aspect-[4/3]'
+                }`}
               >
                 <Photo src={coverFor(cat)} alt={cat.name} sizes="(min-width: 1024px) 33vw, 50vw"
                   className="absolute inset-0 h-full w-full object-cover transition duration-700 group-hover:scale-105" />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/15 to-transparent" />
                 <div className="absolute inset-x-2 bottom-2 flex items-center justify-between gap-1.5 rounded-lg bg-white/95 p-2 sm:inset-x-3 sm:bottom-3 sm:rounded-xl sm:p-3 md:inset-x-4 md:bottom-4 md:pl-4 shadow-md backdrop-blur">
                   <span className="min-w-0">
-                    <span className="block font-bold leading-tight text-ink text-[13px] sm:text-base md:text-lg line-clamp-2">{cat.name}</span>
-                    <span className="flex items-center gap-1 text-[11px] sm:text-xs font-semibold text-gold">
+                    <span className="block font-bold leading-tight text-ink text-[13px] sm:text-base md:text-lg">{cat.name}</span>
+                    <span className="mt-1 flex items-center gap-1 text-[11px] sm:text-xs font-semibold text-gold">
                       <WhatsAppIcon width={12} className="shrink-0" />
                       <span className="hidden sm:inline">Enquire on WhatsApp</span>
                       <span className="sm:hidden">Enquire</span>
@@ -135,56 +133,28 @@ export default function Home() {
             </Link>
           </div>
 
-          <div className="mt-6 sm:mt-8 md:mt-10 grid grid-cols-1 gap-5 md:grid-cols-2 md:gap-6">
-            {/* Video 1 */}
-            <div className="group overflow-hidden rounded-2xl sm:rounded-3xl bg-cream p-3 sm:p-4 shadow-xs transition hover:shadow-xl">
-              <div className="relative aspect-video w-full overflow-hidden rounded-xl sm:rounded-2xl bg-black shadow-inner">
-                <video
-                  controls
-                  playsInline
-                  preload="metadata"
-                  poster="/work-video-1-poster.jpg"
-                  className="h-full w-full object-cover"
-                >
-                  <source src="/work-video-1.mp4" type="video/mp4" />
-                  Your browser does not support the video tag.
-                </video>
-              </div>
-              <div className="flex flex-wrap items-center justify-between gap-2 px-1 pt-3 pb-1">
-                <div>
-                  <h3 className="text-base sm:text-lg font-bold text-ink">In-House Manufacturing</h3>
-                  <p className="text-xs sm:text-sm text-muted">Skilled craftsmen building custom furniture in our workshop</p>
-                </div>
-                <Link to="/works" className="btn-outline shrink-0 !py-1.5 !px-3 text-xs">
-                  See Works <ArrowCircle dark />
-                </Link>
-              </div>
-            </div>
+          <div className="mt-6 sm:mt-8 md:mt-10 grid grid-cols-1 gap-6 md:grid-cols-2 md:gap-8">
+            <video
+              controls
+              playsInline
+              preload="metadata"
+              poster="/work-video-1-poster.jpg"
+              className="aspect-video w-full object-cover"
+            >
+              <source src="/work-video-1.mp4" type="video/mp4" />
+              Your browser does not support the video tag.
+            </video>
 
-            {/* Video 2 */}
-            <div className="group overflow-hidden rounded-2xl sm:rounded-3xl bg-cream p-3 sm:p-4 shadow-xs transition hover:shadow-xl">
-              <div className="relative aspect-video w-full overflow-hidden rounded-xl sm:rounded-2xl bg-black shadow-inner">
-                <video
-                  controls
-                  playsInline
-                  preload="metadata"
-                  poster="/work-video-2-poster.jpg"
-                  className="h-full w-full object-cover"
-                >
-                  <source src="/work-video-2.mp4" type="video/mp4" />
-                  Your browser does not support the video tag.
-                </video>
-              </div>
-              <div className="flex flex-wrap items-center justify-between gap-2 px-1 pt-3 pb-1">
-                <div>
-                  <h3 className="text-base sm:text-lg font-bold text-ink">Completed Interior Installation</h3>
-                  <p className="text-xs sm:text-sm text-muted">Curtains, beds & custom living room furniture ready to live in</p>
-                </div>
-                <Link to="/works" className="btn-outline shrink-0 !py-1.5 !px-3 text-xs">
-                  See Works <ArrowCircle dark />
-                </Link>
-              </div>
-            </div>
+            <video
+              controls
+              playsInline
+              preload="metadata"
+              poster="/work-video-2-poster.jpg"
+              className="aspect-video w-full object-cover"
+            >
+              <source src="/work-video-2.mp4" type="video/mp4" />
+              Your browser does not support the video tag.
+            </video>
           </div>
         </div>
       </section>

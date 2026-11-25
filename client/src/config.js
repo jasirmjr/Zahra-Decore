@@ -27,12 +27,12 @@ export const SITE = {
 
 // Product categories shown on the landing page (admin picks one per product)
 export const CATEGORIES = [
-  { name: 'Sofas', image: 'sofa-brown' },
-  { name: 'Beds & Cots', image: 'bed-woven' },
-  { name: 'Curtains', image: 'bedroom-curtains' },
-  { name: 'Dining Sets', image: 'dining-living' },
-  { name: 'Wardrobes', image: 'bedroom-warm' },
-  { name: 'Custom Furniture', image: 'sofa-grey-blinds' },
+  { name: 'Metal Cots', image: 'bed-woven' },
+  { name: 'Premium Sofas', image: 'sofa-brown' },
+  { name: 'Curtains & Blinds', image: 'bedroom-curtains' },
+  { name: 'Dining Tables & Metal Chairs', image: 'dining-living' },
+  { name: 'Home Decor Items', image: 'living-grey' },
+  { name: 'Gypsum & Wall Works', image: 'bedroom-light' },
 ];
 // Images are names of files in client/public/images (made by "npm run images" from /image-originals)
 

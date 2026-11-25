@@ -5,7 +5,7 @@ import { SectionHead } from './Sections';
 
 
 const FEATURES = [
-  [SofaIcon, 'All Interior Products', 'Sofas, beds & cots, curtains, dining, wardrobes — everything under one roof.', 'living-grey'],
+  [SofaIcon, 'Everything for Your Home', 'Metal cots, premium sofas, curtains, home decor items, gypsum & wallpaper works — under one roof.', 'living-grey'],
   [ShieldIcon, 'We Manufacture Everything', 'Every product is made in our own workshop with strict quality checks.', 'sofa-beige'],
   [RulerIcon, 'Custom Made Furniture', 'Furniture built to your size, fabric, colour and design requirements.', 'sofa-grey-blinds'],
   [TruckIcon, 'Delivery & Installation', 'We deliver and fit everything neatly, ready to use the same day.', 'bed-cozy'],
@@ -19,8 +19,8 @@ export default function AboutContent({ full = false }) {
         <div className="lg:sticky lg:top-28 lg:self-start">
           <SectionHead eyebrow="About Zahra Decor" title="Interiors you'll love coming home to" />
           <p className="mt-4 text-sm sm:text-base leading-relaxed text-muted">
-            We provide <b className="text-ink">all interior products</b> — mainly <b className="text-ink">sofas, beds & cots and curtains</b>,
-            along with dining sets, wardrobes, chairs and complete home furnishing.
+            We provide <b className="text-ink">everything a home needs</b> — mainly <b className="text-ink">metal cots, premium sofas and curtains</b>,
+            along with dining tables and all home decor items, plus <b className="text-ink">gypsum ceilings, plastering and wallpaper works</b>.
           </p>
           <p className="mt-3 text-sm sm:text-base leading-relaxed text-muted">
             <b className="text-ink">We manufacture all our products</b> ourselves, and we also

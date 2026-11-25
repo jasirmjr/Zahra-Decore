@@ -7,22 +7,16 @@ import { SITE, waLink } from '../config';
 
 const SERVICES = [
   {
-    title: 'Custom Furniture Manufacturing',
-    text: 'Furniture built exactly to your requirement — size, design, wood, fabric and colour of your choice. Bring a photo or idea and we will make it.',
-    points: ['Made-to-measure designs', 'Choice of wood & finish', 'Home & office furniture'],
-    image: 'sofa-grey-blinds',
+    title: 'Metal Cots',
+    text: 'Strong, stylish metal cots built to last — in single, double, queen and king sizes, made to your measurements and design.',
+    points: ['Custom sizes & designs', 'Rust-proof powder coating', 'Storage & bunk options'],
+    image: 'bed-woven',
   },
   {
-    title: 'Sofas & Seating',
-    text: 'Sofa sets, L-shaped sectionals, recliners, diwans and accent chairs crafted for comfort and long life.',
+    title: 'Premium Sofas',
+    text: 'Premium sofa sets, L-shaped sectionals, recliners and diwans crafted for comfort and long life — in the fabric and colour you choose.',
     points: ['Fabric & leatherette options', 'High-density foam', 'Custom sizes'],
     image: 'sofa-brown',
-  },
-  {
-    title: 'Beds & Cots',
-    text: 'Wooden and upholstered beds, cots with storage and kids’ beds in all standard and custom sizes.',
-    points: ['Hydraulic & box storage', 'Cushioned headboards', 'Single, double, queen & king'],
-    image: 'bed-woven',
   },
   {
     title: 'Curtains & Blinds',
@@ -31,20 +25,26 @@ const SERVICES = [
     image: 'bedroom-curtains',
   },
   {
-    title: 'Dining & Wardrobes',
-    text: 'Dining tables, chairs, wardrobes, TV units and cabinets designed to make the most of your space.',
-    points: ['Space-saving designs', 'Laminate, veneer & solid wood', 'Matching sets'],
+    title: 'Dining Tables & Metal Chairs',
+    text: 'Dining tables in wood, glass and metal, with sturdy metal chairs — made in the size, finish and number of seats you need.',
+    points: ['4, 6 & 8 seater sets', 'Metal & wooden frames', 'Custom sizes & finishes'],
     image: 'dining-living',
   },
   {
-    title: 'Upholstery & Renovation',
-    text: 'Give your old furniture a new life — re-upholstery, foam replacement, polishing and repair.',
-    points: ['Sofa re-covering', 'Foam & cushion refill', 'Polish & repair'],
-    image: 'sofa-cushions',
+    title: 'Home Decor Items',
+    text: 'Everything else your home needs — wardrobes, TV units, cabinets, cushions and more, customised to fit your space and style.',
+    points: ['Wardrobes & TV units', 'Cabinets & shelves', 'Cushions & furnishings'],
+    image: 'living-grey',
+  },
+  {
+    title: 'Gypsum & Wall Works',
+    text: 'Complete wall and ceiling finishing — gypsum false ceilings, gypsum plastering, wallpapers and decorative wall panels, done neatly by our own team.',
+    points: ['Gypsum false ceilings', 'Gypsum plastering', 'Wallpapers & wall panels'],
+    image: 'bedroom-light',
   },
   {
     title: 'Complete Interior Solutions',
-    text: 'From planning to installation, we furnish complete homes, villas, flats and offices with a single team.',
+    text: 'From planning to installation, we furnish complete homes, villas, flats and offices — every item customised to your requirement.',
     points: ['Design consultation', 'Furniture + furnishing package', 'On-time installation'],
     image: 'living-lsofa',
   },
@@ -55,7 +55,7 @@ export default function Services() {
     <>
       <PageHeader eyebrow="Services" title="Our Services"
         image="sofa-beige"
-        text="Everything for your interior — designed, manufactured and installed by us." />
+        text="Everything your home needs — furniture, curtains, gypsum and wall works — customised and installed by us." />
 
       {SERVICES.map((s, i) => (
         <section key={s.title} className={`w-full py-10 sm:py-12 md:py-14 ${i % 2 ? 'bg-white' : 'bg-cream'}`}>

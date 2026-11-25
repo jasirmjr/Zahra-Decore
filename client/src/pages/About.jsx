@@ -2,7 +2,7 @@ import PageHeader from '../components/PageHeader';
 import AboutContent from '../components/AboutContent';
 import { Process, CtaBanner, SectionHead } from '../components/Sections';
 
-const PRODUCTS = ['Sofas & Sectionals', 'Beds & Cots', 'Curtains & Blinds', 'Dining Sets', 'Wardrobes', 'Chairs & Recliners', 'TV Units & Cabinets', 'Cushions & Furnishings'];
+const PRODUCTS = ['Metal Cots', 'Premium Sofas', 'Curtains & Blinds', 'Dining Tables & Metal Chairs', 'Wardrobes & TV Units', 'Home Decor Items', 'Gypsum Ceilings & Plastering', 'Wallpapers & Wall Panels'];
 
 export default function About() {
   return (
