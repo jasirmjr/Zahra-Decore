@@ -6,14 +6,13 @@
 import { useEffect, useState } from 'react';
 import { CloseIcon, ChevronLeft, ChevronRight } from './Icons';
 
-export function UploadedPhoto({ item, className = '', imgClassName = '', fill = false, eager = false }) {
+export function UploadedPhoto({ item, className = '', imgClassName = '', fill = false, eager = false, aspect = '4 / 3' }) {
   const [loaded, setLoaded] = useState(false);
-  const ratio = item.w && item.h ? `${item.w} / ${item.h}` : '4 / 3';
   return (
     <div
       className={`relative overflow-hidden bg-cream ${className}`}
       style={{
-        aspectRatio: fill ? undefined : ratio,
+        aspectRatio: fill ? undefined : aspect,
         backgroundImage: item.blur ? `url(${item.blur})` : undefined,
         backgroundSize: 'cover',
         backgroundPosition: 'center',
@@ -33,7 +32,7 @@ export function UploadedPhoto({ item, className = '', imgClassName = '', fill = 
       ) : item.video && <div className="absolute inset-0 bg-neutral-800" />}
       {item.video && (
         <span className="pointer-events-none absolute inset-0 grid place-items-center">
-          <span className="grid h-12 w-12 sm:h-14 sm:w-14 place-items-center rounded-full bg-black/55 text-white backdrop-blur-sm">
+          <span className="grid h-12 w-12 sm:h-14 sm:w-14 place-items-center rounded-full bg-black/55 text-white backdrop-blur-sm transition-transform duration-300 group-hover:scale-110">
             <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5.5v13l11-6.5z" /></svg>
           </span>
         </span>
@@ -103,21 +102,21 @@ export function Lightbox({ items, index, onClose, onIndex }) {
   );
 }
 
-// Masonry grid + lightbox
-export default function PhotoGrid({ items }) {
+// Grid + lightbox: every asset displays in the exact same preview size
+export default function PhotoGrid({ items, aspect = '4 / 3' }) {
   const [open, setOpen] = useState(null);
   return (
     <>
-      <div className="columns-2 md:columns-3 lg:columns-4 gap-3 sm:gap-5">
+      <div className="grid grid-cols-2 md:grid-cols-3 gap-3.5 sm:gap-5 md:gap-6">
         {items.map((it, i) => (
           <figure key={it.id} onClick={() => setOpen(i)}
-            className="group mb-4 sm:mb-6 cursor-zoom-in break-inside-avoid">
+            className="group cursor-zoom-in">
             <div className="overflow-hidden rounded-xl sm:rounded-2xl">
-              <UploadedPhoto item={it} eager={i < 4}
+              <UploadedPhoto item={it} eager={i < 4} aspect={aspect}
                 imgClassName="transition duration-700 group-hover:scale-105" />
             </div>
             {it.caption && (
-              <figcaption className="px-1 pt-2 text-xs sm:text-sm md:text-base font-semibold text-ink">
+              <figcaption className="px-1 pt-2 text-xs sm:text-sm md:text-base font-semibold text-ink line-clamp-1">
                 {it.caption}
               </figcaption>
             )}

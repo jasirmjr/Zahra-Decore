@@ -24,9 +24,9 @@ export default function Projects() {
         </div>
 
         {projects === null ? (
-          <div className="columns-2 md:columns-3 lg:columns-4 gap-3 sm:gap-4">
-            {Array.from({ length: 8 }, (_, i) => (
-              <div key={i} className={`mb-4 animate-pulse rounded-xl sm:rounded-2xl bg-cream ${i % 3 ? 'aspect-[4/3]' : 'aspect-[3/4]'}`} />
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-3.5 sm:gap-5 md:gap-6">
+            {Array.from({ length: 6 }, (_, i) => (
+              <div key={i} className="animate-pulse rounded-xl sm:rounded-2xl bg-cream aspect-[4/3]" />
             ))}
           </div>
         ) : projects.length > 0 ? (
