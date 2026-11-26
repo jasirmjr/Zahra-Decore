@@ -21,8 +21,8 @@ export const SITE = {
   // Leave empty to show a photo card with an "Open in Google Maps" button instead.
   mapQuery: '11.0046617,75.979915',
 
-  instagram: 'https://instagram.com/zahradecor',
-  facebook: 'https://facebook.com/zahradecor',
+  instagram: 'https://www.instagram.com/zahra_decor_interior/',
+  facebook: 'https://www.facebook.com/share/1DuGJABnqs/',
 };
 
 // Product categories shown on the landing page (admin picks one per product)
