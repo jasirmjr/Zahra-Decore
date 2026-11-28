@@ -4,11 +4,11 @@ import Photo from '../components/Photo';
 import { SITE, waLink, mailLink, tel, PHONES } from '../config';
 import { PhoneIcon, MailIcon, PinIcon, WhatsAppIcon, InstagramIcon, FacebookIcon, ArrowCircle } from '../components/Icons';
 
-function Card({ icon, label, children, href, external }) {
+function Card({ icon, label, children, href, external, className = '' }) {
   const Tag = href ? 'a' : 'div'; // no href: a plain card that can hold several links
   return (
     <Tag href={href} target={external ? '_blank' : undefined} rel={href ? 'noreferrer' : undefined}
-      className="group flex items-center gap-4 rounded-3xl bg-white p-5 transition hover:-translate-y-0.5 hover:shadow-xl">
+      className={`group flex items-center gap-4 rounded-3xl bg-white p-5 transition hover:-translate-y-0.5 hover:shadow-xl ${className}`}>
       <span className="grid h-12 w-12 shrink-0 place-items-center rounded-2xl bg-gold/15 text-gold">{icon}</span>
       <span className="min-w-0 flex-1">
         <span className="block text-sm font-semibold text-muted">{label}</span>
@@ -34,9 +34,12 @@ export default function Contact() {
             <Card icon={<PhoneIcon />} label="Call us">
               {PHONES.map((p) => <a key={p} href={tel(p)} className="block py-0.5 hover:text-gold">{p}</a>)}
             </Card>
+            <Card icon={<PhoneIcon />} label="Factory contact">
+              {SITE.factoryPhones.map((p) => <a key={p} href={tel(p)} className="block py-0.5 hover:text-gold">{p}</a>)}
+            </Card>
             <Card icon={<WhatsAppIcon />} label="WhatsApp" href={waLink()} external>Chat on WhatsApp</Card>
             <Card icon={<MailIcon />} label="Email" href={mailLink}>{SITE.email.split("@")[0]}<wbr />@{SITE.email.split("@")[1]}</Card>
-            <Card icon={<PinIcon />} label="Visit showroom" href={SITE.mapLink} external>{SITE.address}</Card>
+            <Card icon={<PinIcon />} label="Visit showroom" href={SITE.mapLink} external className="sm:col-span-2 lg:col-span-1 2xl:col-span-2">{SITE.address}</Card>
           </div>
 
           <div className="mt-4 rounded-2xl sm:rounded-3xl bg-white p-4 sm:p-5">

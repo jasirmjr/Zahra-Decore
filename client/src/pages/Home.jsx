@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { api } from '../api';
-import { CATEGORIES, DEFAULT_HERO, SITE, waLink } from '../config';
+import { CATEGORIES, HERO_SLIDES, HERO_INTERVAL, SITE, waLink } from '../config';
 import { WhatsAppIcon, ArrowCircle, ShieldIcon, RulerIcon, ClockIcon } from '../components/Icons';
 import Photo from '../components/Photo';
 import { UploadedPhoto } from '../components/PhotoGrid';
@@ -15,11 +15,19 @@ const STATS = [
 ];
 
 export default function Home() {
-  const [hero, setHero] = useState(null);
   const [works, setWorks] = useState([]);
+  const [slide, setSlide] = useState(0);
+  // slides are mounted one step ahead, so photos download one at a time instead of all at once
+  const [mounted, setMounted] = useState(2);
 
   useEffect(() => {
-    api('/settings').then((s) => setHero(s.heroImage || DEFAULT_HERO)).catch(() => setHero(DEFAULT_HERO));
+    if (HERO_SLIDES.length < 2) return;
+    const t = setInterval(() => setSlide((i) => (i + 1) % HERO_SLIDES.length), HERO_INTERVAL);
+    return () => clearInterval(t);
+  }, []);
+  useEffect(() => { setMounted((m) => Math.max(m, Math.min(slide + 2, HERO_SLIDES.length))); }, [slide]);
+
+  useEffect(() => {
     api('/works').then(setWorks).catch(() => {});
   }, []);
 
@@ -37,14 +45,22 @@ export default function Home() {
     <>
       {/* ================= HERO: Full-size background banner ================= */}
       <section className="relative mt-16 sm:mt-18 md:mt-20 min-h-[500px] sm:min-h-[560px] md:min-h-[600px] lg:h-[calc(100svh-5rem)] w-full overflow-hidden">
-        {hero && (
-          <Photo
-            src={hero}
-            priority
-            alt="Zahra Decor interior"
-            className="animate-hero absolute inset-0 h-full w-full object-cover"
-          />
-        )}
+        {HERO_SLIDES.slice(0, mounted).map((src, i) => (
+          <div
+            key={src}
+            aria-hidden={i !== slide}
+            className={`absolute inset-0 transition-opacity duration-[1500ms] ease-in-out ${i === slide ? 'opacity-100' : 'opacity-0'}`}
+          >
+            <Photo
+              src={src}
+              priority={i === 0}
+              alt={i === slide ? `${SITE.name} – ${CATEGORIES[i]?.name || 'interior'}` : ''}
+              // slow zoom-out while showing; snaps back (hidden) after fading out, ready for next time
+              className={`h-full w-full object-cover transition-transform ease-out ${
+                i === slide ? 'scale-100 duration-[7000ms]' : 'scale-[1.08] duration-0 delay-[1600ms]'}`}
+            />
+          </div>
+        ))}
         <div className="absolute inset-0 bg-gradient-to-r from-black/85 via-black/50 to-black/20" />
 
         <div className="wrap relative flex h-full flex-col justify-center pt-8 pb-24 sm:pb-28 text-white">
@@ -102,12 +118,17 @@ export default function Home() {
             {CATEGORIES.map((cat, i) => (
               <a
                 key={cat.name}
-                href={waLink(`Hello ${SITE.name}, I would like to enquire about ${cat.name}. Please share designs and prices.`)}
+                href={waLink(`Hello ${SITE.name}, I would like to enquire about ${cat.name}. Please share designs and prices.`, SITE.whatsappShop)}
                 target="_blank"
                 rel="noreferrer"
                 className={`group relative overflow-hidden rounded-xl sm:rounded-2xl text-left shadow-xs transition hover:shadow-xl ${
-                  // an odd last card fills the rest of its row instead of leaving a gap
-                  i === CATEGORIES.length - 1 && CATEGORIES.length % 2 ? 'col-span-2 aspect-[8/3] md:aspect-auto' : 'aspect-[4/3]'
+                  // a lone last card fills the rest of its row instead of leaving a gap
+                  i === CATEGORIES.length - 1
+                    ? `${CATEGORIES.length % 2 ? 'col-span-2 aspect-[8/3]' : 'aspect-[4/3]'} ${
+                        CATEGORIES.length % 3 === 1 ? 'md:col-span-3 md:aspect-[4/1]'
+                        : CATEGORIES.length % 3 === 2 ? 'md:col-span-2 md:aspect-[8/3]'
+                        : 'md:col-span-1 md:aspect-[4/3]'}`
+                    : 'aspect-[4/3]'
                 }`}
               >
                 <Photo src={coverFor(cat)} alt={cat.name} sizes="(min-width: 1024px) 33vw, 50vw"

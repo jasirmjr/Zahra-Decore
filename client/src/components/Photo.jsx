@@ -3,7 +3,7 @@
 //                                             the browser downloads only the size the screen needs.
 //  <Photo src="/uploads/abc.webp" />        -> any normal URL (admin uploads) works too.
 const WIDTHS = [640, 960, 1280, 1920, 2560];
-const MAX = { 'sofa-cushions': 1920 }; // originals smaller than 2560px
+const MAX = { 'sofa-cushions': 1920, 'svc-modular-kitchen': 1920 }; // originals smaller than 2560px
 
 const isLocal = (src) => src && !/[/:]/.test(src);
 export const photoUrl = (src, w = 1280) => (isLocal(src) ? `/images/${src}-${w}.webp` : src);

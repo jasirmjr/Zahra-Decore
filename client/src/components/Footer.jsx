@@ -31,6 +31,14 @@ export default function Footer() {
             <li><a href={waLink()} target="_blank" rel="noreferrer" className="flex items-center gap-2 py-1.5 hover:text-gold"><WhatsAppIcon width={14} className="text-gold shrink-0" />Chat on WhatsApp</a></li>
             <li><a href={mailLink} className="flex items-center gap-2 py-1.5 break-words hover:text-gold"><MailIcon width={14} className="shrink-0 text-gold" /><span className="min-w-0">{SITE.email.split("@")[0]}<wbr />@{SITE.email.split("@")[1]}</span></a></li>
             <li><a href={SITE.mapLink} target="_blank" rel="noreferrer" className="flex items-start gap-2 py-1.5 hover:text-gold"><PinIcon width={14} className="mt-0.5 shrink-0 text-gold" />{SITE.address}</a></li>
+            {SITE.factoryPhones?.length > 0 && (
+              <li className="pt-2">
+                <span className="block pb-0.5 text-xs font-bold uppercase tracking-wide text-ink">Factory contact</span>
+                {SITE.factoryPhones.map((p) => (
+                  <a key={p} href={tel(p)} className="flex items-center gap-2 py-1.5 hover:text-gold"><PhoneIcon width={14} className="text-gold shrink-0" />{p}</a>
+                ))}
+              </li>
+            )}
           </ul>
         </div>
         <div>
